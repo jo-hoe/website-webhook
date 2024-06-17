@@ -1,18 +1,25 @@
 # Website Webhook
 
-Scrapes a website, sending a request in case the website updated.
-Still work in progress.
+Scrapes a website, sending a request in case the website is updated.
+Still a work in progress.
 
 ## Configuration
 
 ```yaml
 webhookConfig:
-  runOnce: false # if set to true, the service will run once on startup and exit, default is false
+  runOnce: false # if set to true, the service will run once on startup and exit; default is false
   schedule: "0 */3 * * *" # cronjob schedule, default is every 3 minutes, if set 'runOnce' will be ignored
-websiteObservers: # regex to match the body of the mail, if no body is needed do not set this
-- url: "test" # name json attribute in the callback 
-  name: "test1"
-  xpath: ""
+websiteObserver:
+  url: "https://myurl.com"
+  commands:
+    - kind: "storeVariable"
+      parameters:
+          name: "oldState"
+          xpath: "//a[@class='some class']"
+    - kind: "triggerCallbackOnChangedState"
+      parameters:
+          name: "changedState"
+          xpath: "//a[@class='some class']"
   callback:
     url: "https://example.com/callback" # callback url
     method: "POST" # method of the callback, has to be provided as uppercase string
@@ -22,8 +29,10 @@ websiteObservers: # regex to match the body of the mail, if no body is needed do
     - name: "Content-Type"
       value: "application/json"
     body:
-    - name: "test"
-      value: "<<website.name>>"
+    - name: "event"
+      value: "some static string"
+    - name: "description"
+      value: "The value on page <<websiteObserver.url>> changed from '<<command.oldState>>' to '<<command.changedState>>'"
 ```
 
 ## Templating
@@ -32,12 +41,6 @@ The body allows for templating with double braces. Allowed variables are:
 
 placesholder | description
 ----------- | -----------
-`<<websiteObservers.name>>` | set value in `websites.name`
-`<<websiteObservers.url>>` | set value in `websites.url`
-`<<websiteObservers.xpath>>` | set value in `websites.xpath`
+`<<websiteObserver.url>>` | set value in `websiteObserver.url`
 `<<value.old>>` | the old value of the xpath
 `<<value.new>>` | the new value of the xpath
-
-## Links
-
-- scheduling <https://github.com/go-co-op/gocron/tree/v2>
