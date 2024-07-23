@@ -19,7 +19,7 @@ func TestDefaultObserver_GetState(t *testing.T) {
 			o:    &DefaultObserver{},
 			args: args{
 				url:   "https://github.com/gocolly/colly/tree/master",
-				xpath: "//span[@class='Truncate-text ']",
+				xpath: "//a[@class='color-fg-default']",
 			},
 			wantNewState: "colly",
 			wantErr:      false,
