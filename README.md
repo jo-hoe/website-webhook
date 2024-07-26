@@ -29,7 +29,7 @@ callback:
 
 ## Templating
 
-The body allows for templating with double braces. Values can be address as follows:
+The the values of `callback.body` and `callback.headers` allow for templating with double braces. Values can be address as follows:
 
 placesholder | command kind | description
 ----------- | ----------- | -----------
