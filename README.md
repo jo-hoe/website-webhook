@@ -6,36 +6,35 @@ Still a work in progress.
 ## Configuration
 
 ```yaml
-webhookConfig:
-  interval: "3m" # interval describing how often the function is run, default is every 3 minutes, if set 'runOnce' will be ignored
-websiteObserver:
-  url: "https://myurl.com"
-  commands:
-    - kind: "triggerCallbackOnChangedState"
-      parameters:
-          name: "changedState"
-          xpath: "//a[@class='some class']"
-  callback:
-    url: "https://example.com/callback" # callback url
-    method: "POST" # method of the callback, has to be provided as uppercase string
-    timeout: 24s # timeout for the callback, default is 24 seconds
-    retries: 0 # number of retries for the callback, default is 0
-    headers:
-    - name: "Content-Type"
-      value: "application/json"
-    body:
-    - name: "event"
-      value: "some static string"
-    - name: "description"
-      value: "The value on page <<websiteObserver.url>> changed from '<<command.oldState>>' to '<<command.changedState>>'"
+interval: "3m" # interval describing how often the function is run, default is every 3 minutes
+url: "https://myurl.com"
+commands:
+  - kind: "triggerCallbackOnChangedState" # provides name, xpath, kind + old and new value for templating
+    name: "changedState"
+    xpath: "//a[@class='some class']"
+callback:
+  url: "https://example.com/callback" # callback url
+  method: "POST" # method of the callback, has to be provided as uppercase string
+  timeout: 24s # timeout for the callback, default is 24 seconds
+  retries: 0 # number of retries for the callback, default is 0
+  headers:
+  - name: "Content-Type"
+    value: "application/json"
+  body:
+  - name: "event"
+    value: "some static string"
+  - name: "description"
+    value: "The value on page <<url>> changed from '<<commands.changedState.old>>' to '<<commands.changedState.new>>'"
 ```
 
 ## Templating
 
-The body allows for templating with double braces. Allowed variables are:
+The body allows for templating with double braces. Values can be address as follows:
 
-placesholder | description
------------ | -----------
-`<<websiteObserver.url>>` | set value in `websiteObserver.url`
-`<<value.old>>` | the old value of the xpath
-`<<value.new>>` | the new value of the xpath
+placesholder | command kind | description
+----------- | ----------- | -----------
+`<<url>>` | all kinds | set value in `url`
+`<<commands.{command_name}.name>>` | all kinds | set value in `name` of the command
+`<<commands.{command_name}.xpath>>` | `triggerCallbackOnChangedState` | set to the xpath of the command
+`<<commands.{command_name}.old>>` | `triggerCallbackOnChangedState` | the old value of the xpath
+`<<commands.{command_name}.new>>` | `triggerCallbackOnChangedState` | the new value of the xpath
