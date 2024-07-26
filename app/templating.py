@@ -1,11 +1,11 @@
 import re
 
 
-start = "<<"
-end = ">>"
+PLACEHOLDER_START = "<<"
+PLACEHOLDER_END = ">>"
 
 def template(key: str, value: str, replace_with: str) -> str:
-    cleaned_value = re.sub(f"{start}\s", start, value)
-    cleaned_value = re.sub(f"\s{end}", end, cleaned_value)
+    cleaned_value = re.sub(f"{PLACEHOLDER_START}{key}\s", PLACEHOLDER_START, value)
+    cleaned_value = re.sub(f"\s{PLACEHOLDER_END}", PLACEHOLDER_END, cleaned_value)
 
-    return cleaned_value.replace(f"{start}{key}{end}", replace_with)
+    return cleaned_value.replace(f"{PLACEHOLDER_START}{key}{PLACEHOLDER_END}", replace_with)

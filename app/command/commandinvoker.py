@@ -24,7 +24,7 @@ class CommandInvoker:
         for element in input:
             templatedElement = NameValuePair(
                 name=element.name,
-                value=command.template(element.value)
+                value=command.replace_placeholder(element.value)
             )
             result.append(templatedElement)
 
