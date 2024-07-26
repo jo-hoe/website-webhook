@@ -11,10 +11,6 @@ webhookConfig:
 websiteObserver:
   url: "https://myurl.com"
   commands:
-    - kind: "storeVariable"
-      parameters:
-          name: "oldState"
-          xpath: "//a[@class='some class']"
     - kind: "triggerCallbackOnChangedState"
       parameters:
           name: "changedState"
