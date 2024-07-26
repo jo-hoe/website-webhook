@@ -8,8 +8,7 @@ def scrape(url: str, xpath: str) -> str:
         scraper = cloudscraper.create_scraper()
         response = scraper.get(url)
         if not response.ok:
-            logging.error(f"could not read {url} status: {
-                          response.status_code}")
+            logging.error(f"could not read {url} status: {response.status_code}")
             return None
     except BaseException as error:
         logging.error(f"could not read {url} error: {error}")
