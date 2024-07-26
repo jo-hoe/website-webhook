@@ -8,7 +8,7 @@ Still a work in progress.
 ```yaml
 webhookConfig:
   runOnce: false # if set to true, the service will run once on startup and exit; default is false
-  schedule: "0 */3 * * *" # cronjob schedule, default is every 3 minutes, if set 'runOnce' will be ignored
+  schedule: "3m" # schedule, default is every 3 minutes, if set 'runOnce' will be ignored
 websiteObserver:
   url: "https://myurl.com"
   commands:
