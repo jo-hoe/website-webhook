@@ -3,7 +3,7 @@ import requests
 
 from typing import List
 from app.command.command import Command
-from app.config.config import Callback, NameValuePair
+from app.config import Callback, NameValuePair
 
 
 class CommandInvoker:
