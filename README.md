@@ -42,10 +42,10 @@ Intervals only support certain strings
 
 The the values of `callback.body` and `callback.headers` allow for templating with double braces. Values can be address as follows:
 
-placesholder | command kind | description
------------ | ----------- | -----------
-`<<url>>` | all kinds | set value in `url`
-`<<commands.{command_name}.name>>` | all kinds | set value in `name` of the command
-`<<commands.{command_name}.xpath>>` | `triggerCallbackOnChangedState` | set to the xpath of the command
-`<<commands.{command_name}.old>>` | `triggerCallbackOnChangedState` | the old value of the xpath
-`<<commands.{command_name}.new>>` | `triggerCallbackOnChangedState` | the new value of the xpath
+| placesholder | command kind | description |
+| ----------- | ----------- | ----------- |
+| `<<url>>` | all kinds | set value in `url` |
+| `<<commands.{command_name}.name>>` | all kinds | set value in `name` of the command |
+| `<<commands.{command_name}.xpath>>` | `triggerCallbackOnChangedState` | set to the xpath of the command |
+| `<<commands.{command_name}.old>>` | `triggerCallbackOnChangedState` | the old value of the xpath |
+| `<<commands.{command_name}.new>>` | `triggerCallbackOnChangedState` | the new value of the xpath |
