@@ -1,5 +1,7 @@
 # Website Webhook
 
+[![Test Status](https://github.com/jo-hoe/website-webhook/actions/workflows/test.yml/badge.svg)](https://github.com/jo-hoe/website-webhook/actions?workflow=test)
+
 Scrapes a website, sending a request in case the website is updated.
 Still a work in progress.
 
