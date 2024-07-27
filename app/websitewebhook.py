@@ -14,15 +14,6 @@ def start(config_path: str):
     thread = Thread(target=schedule_process, args=(config, ))
     thread.start()
 
-    # thread will only end in case exception was raised
-    thread.join()
-    stop()
-
-
-def stop():
-    logging.info("Scheduling process stopped. Killing process")
-    sys.exit(1)
-
 
 def schedule_process(config: Config):
     invoker = CommandInvoker(config.commands, config.callback)

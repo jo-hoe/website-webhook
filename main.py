@@ -22,6 +22,8 @@ if __name__ == "__main__":
     config_path = os.getenv('CONFIG_PATH', DEFAULT_CONFIG_PATH)
     start(config_path)
 
+    port = int(os.getenv('PORT', DEFAULT_PORT))
+    logging.info(f"Starting server on port {port}")
     # setup readiness endpoint
-    with HTTPServer(('', os.getenv('PORT', DEFAULT_PORT)), app) as server:
+    with HTTPServer(('', port), app) as server:
         server.serve_forever()
