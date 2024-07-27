@@ -22,9 +22,12 @@ class CommandInvoker:
             triggerCallback = command.execute()
 
         if triggerCallback:
+            logging.info("sending callback")
             return self._send_callback()
+        else:
+            logging.info("no callback required")
 
-        return False
+        return True
 
     def _template(self, input: List[NameValuePair], command: Command) -> List[NameValuePair]:
         result = []
@@ -63,7 +66,7 @@ class CommandInvoker:
     def _send_callback(self):
         request = self._build_request()
         session = requests.Session()
-        response = session.send(request, timeout=self.callback.timeout,
+        response = session.send(request, timeout=self.callback.timeout.seconds,
                                 retries=self.callback.retries)
 
         if response.ok:

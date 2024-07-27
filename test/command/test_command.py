@@ -1,15 +1,7 @@
 
 
-from app.command.command import Command
 from app.scraper import Scraper
-
-
-class MockCommand(Command):
-    def execute(self) -> bool:
-        return super().execute()
-
-    def replace_placeholder(self, input: str) -> str:
-        return super().replace_placeholder(input)
+from test.mock import MockCommand
 
 
 def test_replace_placeholder():

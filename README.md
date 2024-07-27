@@ -27,6 +27,15 @@ callback:
     value: "The value on page <<url>> changed from '<<commands.changedState.old>>' to '<<commands.changedState.new>>'"
 ```
 
+Intervals only support certain strings
+
+|string|interval|
+|---|---|
+|s|seconds|
+|m|minutes|
+|h|hours|
+|d|days|
+
 ## Templating
 
 The the values of `callback.body` and `callback.headers` allow for templating with double braces. Values can be address as follows:

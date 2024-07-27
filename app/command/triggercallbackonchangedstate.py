@@ -8,8 +8,8 @@ KIND = "TriggerCallbackOnChangedState"
 
 class TriggerCallbackOnChangedState(Command):
 
-    def __init__(self, name: str, url: str, xpath: str) -> None:
-        super().__init__(KIND, name, url)
+    def __init__(self, name: str, url: str, xpath: str, scraper: scraper.Scraper) -> None:
+        super().__init__(KIND, name, url, scraper)
         self._xpath = xpath
         self._old_value = None
         self._new_value = None

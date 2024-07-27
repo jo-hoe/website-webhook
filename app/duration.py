@@ -6,11 +6,17 @@ import re
 
 def parse_duration(duration_string: str) -> timedelta:
     # Define the regex pattern for matching duration components
-    pattern = r'(\d+)(ms|s|m|h|d)'
+    # This pattern now matches the entire string to ensure no invalid characters
+    pattern = r'^(\d+[smhd])+$'
+
+    if not re.match(pattern, duration_string):
+        raise ValueError(f"Invalid duration format: {duration_string}")
+
+    # Pattern for individual components
+    component_pattern = r'(\d+)([smhd])'
 
     # Define a mapping of units to their timedelta arguments
     unit_mapping = {
-        'ms': 'milliseconds',
         's': 'seconds',
         'm': 'minutes',
         'h': 'hours',
@@ -18,7 +24,7 @@ def parse_duration(duration_string: str) -> timedelta:
     }
 
     # Find all matches in the duration string
-    matches = re.findall(pattern, duration_string)
+    matches = re.findall(component_pattern, duration_string)
 
     # Initialize a timedelta object
     duration = timedelta()

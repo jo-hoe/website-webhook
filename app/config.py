@@ -1,4 +1,7 @@
+from datetime import timedelta
 from typing import List
+
+from app.duration import parse_duration
 
 
 class NameValuePair:
@@ -13,7 +16,7 @@ class NameValuePair:
 class Callback:
     url: str
     method: str
-    timeout: str
+    timeout: timedelta
     retries: int
     headers: List[NameValuePair]
     body: List[NameValuePair]
@@ -24,6 +27,7 @@ class Callback:
         self.retries = retries
         self.headers = headers
         self.body = body
+        self.timeout = parse_duration(timeout)
 
 
 class CommandConfig:
@@ -38,13 +42,13 @@ class CommandConfig:
 
 
 class Config:
-    interval: str
+    interval: timedelta
     url: str
     commands: List[CommandConfig]
     callback: Callback
 
     def __init__(self, interval: str, url: str, commands: List[CommandConfig], callback: Callback) -> None:
-        self.interval = interval
+        self.interval = parse_duration(interval)
         self.url = url
         self.commands = commands
         self.callback = callback

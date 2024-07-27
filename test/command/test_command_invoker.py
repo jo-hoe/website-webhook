@@ -1,31 +1,9 @@
 import pytest
 import responses
-from typing import List
 
 from app.config import Callback
-from app.scraper import Scraper
-from app.command.command import Command
 from app.command.commandinvoker import CommandInvoker
-
-
-class MockScraper(Scraper):
-
-    def __init__(self, result_values: List[str]) -> None:
-        self._result_values = result_values
-        self._index = 0
-
-    def scrape(self, url: str, xpath: str) -> str:
-        result = self._result_values[self._index % len(self._result_values)]
-        self._index += 1
-        return result
-
-
-class MockCommand(Command):
-    def execute(self) -> bool:
-        return True
-
-    def replace_placeholder(self, input: str) -> str:
-        return super().replace_placeholder(input)
+from test.mock import MockCommand, MockScraper
 
 
 @pytest.mark.integration_test
@@ -45,14 +23,16 @@ def test_command_invoker():
     })
 
     command = MockCommand("mock", "test-name", "test-url",
-                          MockScraper(["a", "b"]))
+                          MockScraper(["a", "b"]), return_values=[False, True])
     callback = Callback(
         url=callback_test_url,
         method=callback_test_method,
         retries=0,
+        timeout="12s",
         headers=[],
         body=[]
     )
     invoker = CommandInvoker([command], callback)
 
+    assert invoker.execute_all_commands(), "execute_all_commands failed"
     assert invoker.execute_all_commands(), "execute_all_commands failed"

@@ -5,7 +5,7 @@ from lxml import etree
 
 class Scraper:
 
-    def scrape(url: str, xpath: str) -> str:
+    def scrape(self, url: str, xpath: str) -> str:
         try:
             scraper = cloudscraper.create_scraper()
             response = scraper.get(url)
