@@ -28,7 +28,7 @@ save-dependencies: ## save current dependencies
 	${PYTHON_DIR}pip freeze > ${ROOT_DIR}requirements.txt
 
 .PHONY: test
-test: ## run python tests
+test: ## run all tests
 	${PYTHON_DIR}pytest $(ROOT_DIR)test/
 	
 .PHONY: start

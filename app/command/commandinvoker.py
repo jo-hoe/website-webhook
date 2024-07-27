@@ -16,9 +16,9 @@ class CommandInvoker:
         for command in self.commands:
             triggerCallback = command.execute()
             if triggerCallback:
-                self.sendCallback()
+                self._sendCallback()
 
-    def template(self, input: List[NameValuePair], command: Command) -> List[NameValuePair]:
+    def _template(self, input: List[NameValuePair], command: Command) -> List[NameValuePair]:
         result = []
 
         for element in input:
@@ -30,13 +30,13 @@ class CommandInvoker:
 
         return result
 
-    def sendCallback(self):
+    def _sendCallback(self):
         templatedHeaders = []
         templatedBody = []
 
         for command in self.commands:
-            templatedHeaders = self.template(self.callback.headers, command)
-            templatedBody = self.template(self.callback.body, command)
+            templatedHeaders = self._template(self.callback.headers, command)
+            templatedBody = self._template(self.callback.body, command)
 
         response = requests.post(
             url=self.callback.url,

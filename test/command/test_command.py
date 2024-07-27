@@ -12,6 +12,6 @@ class MockCommand(Command):
 
 
 def test_replace_placeholder():
-    command = MockCommand("a", "b", "c")
+    command = MockCommand("mock", "test-name", "test-url")
     assert command.replace_placeholder(
-        "<<kind>><<name>><<url>>") == "abc", "replace_placeholder failed"
+        "<<kind>> <<commands.test-name.name>> <<url>>") == "mock test-name test-url", "replace_placeholder failed"
