@@ -11,6 +11,7 @@ class CommandInvoker:
     def __init__(self, commands: List[Command], callback: Callback):
         self.commands = commands
         self.callback = callback
+        self.cached_request = None
 
     def execute_all_commands(self) -> int:
         """
@@ -18,12 +19,30 @@ class CommandInvoker:
         """
         triggerCallback = False
 
+        request = None
         for command in self.commands:
             triggerCallback = command.execute()
-
+        
         if triggerCallback:
+            request = self._build_request()
+
+        if not triggerCallback and self.cached_request is not None:
+            logging.info("Using cached request")
+            request = self.cached_request
+
+        if request is not None:
             logging.info("Sending callback")
-            return self._send_callback()
+            response_code = self._send_callback(request)
+
+            if response_code <= 400:
+                logging.info("Callback sent successfully")
+                self.cached_request = None
+            else:
+                logging.error(
+                    f"Callback send failed, caching request")
+                self.cached_request = request
+
+            return response_code
         else:
             logging.info("No callback required")
 
@@ -63,8 +82,7 @@ class CommandInvoker:
 
         return request.prepare()
 
-    def _send_callback(self) -> int:
-        request = self._build_request()
+    def _send_callback(self, request) -> int:
         session = requests.Session()
 
         stop = False
