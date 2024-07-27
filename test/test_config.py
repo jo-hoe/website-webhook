@@ -39,7 +39,7 @@ def test_create_config():
     assert config.commands[0]._kind == "triggerCallbackOnChangedState"
     assert config.commands[0]._name == "changedState"
     assert config.commands[0]._url == "https://myurl.com"
-    assert config.commands[0]._xpath == "//a[@class='some class']"
+    assert config.commands[0]._xpath == "//a[@class='some class']/text()"
     assert isinstance(config.commands[0]._scraper, Scraper)
 
 
