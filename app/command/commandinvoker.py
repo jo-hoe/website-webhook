@@ -12,9 +12,9 @@ class CommandInvoker:
         self.commands = commands
         self.callback = callback
 
-    def execute_all_commands(self) -> bool:
+    def execute_all_commands(self) -> int:
         """
-        returns True if successful, False otherwise 
+        returns response code of callback, if no callback is required returns None 
         """
         triggerCallback = False
 
@@ -27,7 +27,7 @@ class CommandInvoker:
         else:
             logging.info("no callback required")
 
-        return True
+        return None
 
     def _template(self, input: List[NameValuePair], command: Command) -> List[NameValuePair]:
         result = []
@@ -63,7 +63,7 @@ class CommandInvoker:
 
         return request.prepare()
 
-    def _send_callback(self):
+    def _send_callback(self) -> int:
         request = self._build_request()
         session = requests.Session()
         response = session.send(request, timeout=self.callback.timeout.seconds,
@@ -71,8 +71,8 @@ class CommandInvoker:
 
         if response.ok:
             logging.info("request send successfully")
-            return True
         else:
             logging.error(
                 f"request send failed {response.status_code}: {response.text}")
-            return False
+
+        return response.status_code

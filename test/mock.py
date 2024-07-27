@@ -23,7 +23,9 @@ class MockCommand(Command):
         self._index = 0
 
     def execute(self) -> bool:
-        return self._return_values[self._index % len(self._return_values)]
+        result = self._return_values[self._index % len(self._return_values)]
+        self._index += 1
+        return result
 
     def replace_placeholder(self, input: str) -> str:
         return super().replace_placeholder(input)

@@ -34,5 +34,6 @@ def test_command_invoker():
     )
     invoker = CommandInvoker([command], callback)
 
-    assert invoker.execute_all_commands(), "execute_all_commands failed"
-    assert invoker.execute_all_commands(), "execute_all_commands failed"
+    assert invoker.execute_all_commands(
+    ) == None, "execute_all_commands return unexpected value"
+    assert invoker.execute_all_commands() == 200, "call unsuccessful"
