@@ -8,7 +8,7 @@ Still a work in progress.
 ## Configuration
 
 ```yaml
-interval: "3m" # interval describing how often the function is run, default is every 3 minutes
+interval: "3m" # interval between command execution, default is every 3 minutes
 url: "https://myurl.com"
 commands:
   - kind: "triggerCallbackOnChangedState" # provides name, xpath, kind + old and new value for templating
