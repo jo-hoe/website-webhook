@@ -1,0 +1,1 @@
+Deployed {{ include "website-webhook.fullname" . }} in namespace {{ .Release.Namespace }}
