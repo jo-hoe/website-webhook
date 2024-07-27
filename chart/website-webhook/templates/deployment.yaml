@@ -6,7 +6,7 @@ metadata:
     {{- include "website-webhook.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   {{- end }}
   selector:
     matchLabels:
@@ -38,8 +38,13 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.probePort }}
               protocol: TCP
+          env:
+            - name: CONFIG_PATH
+              value: /run/config/config.yaml
+            - name: PORT
+              value: "{{ .Values.probePort }}"
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
@@ -48,6 +53,9 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}
           volumeMounts:
+            - mountPath: /run/config
+              name: {{ include "website-webhook.fullname" . }}-config-volume
+              readOnly: true
             {{- toYaml . | nindent 12 }}
           {{- end }}
       {{- with .Values.volumes }}
