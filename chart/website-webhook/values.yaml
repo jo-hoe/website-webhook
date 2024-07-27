@@ -2,6 +2,30 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+interval: 1h
+url: ""
+# -- commands for the webhook
+# example:
+# - kind: "triggerCallbackOnChangedState"
+#   name: "changedState"
+#   xpath: "//td[@id='p0']/text()"
+commands: []
+callback:
+  # -- url for the callback
+  url: ""
+  # -- method for the callback
+  method: POST
+  # -- headers for the callback
+  # example:
+  # - name: Content-Type
+  #   value: application/json
+  headers: []
+  # -- definition of the json body for the callback
+  # example:
+  # - name: "description"
+  #   value: "The value on page <<url>> changed from '<<commands.changedState.old>>' to '<<commands.changedState.new>>'"
+  body: []
+
 image:
   repository: ghcr.io/jo-hoe/website-webhook
   pullPolicy: IfNotPresent
@@ -66,19 +90,6 @@ autoscaling:
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
-
-# Additional volumes on the output Deployment definition.
-volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
-
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
 
 nodeSelector: {}
 

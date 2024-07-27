@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "website-webhook.fullname" . }}-config
+  labels:
+    {{- include "website-webhook.labels" . | nindent 4 }}
+data:
+  config.yaml: |-
+    interval: {{ .Values.interval }}
+    url: {{ .Values.url }}
+    callback:
+      url: {{ .Values.callback.url }}
+      method: {{ .Values.callback.method }}
+      headers:
+        {{- toYaml .Values.callback.headers | nindent 8 }}
+      body:
+        {{- toYaml .Values.callback.body | nindent 8 }}
+    commands:
+      {{- with .Values.commands }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -49,12 +49,9 @@ start-cluster: # starts k3d cluster and registry
 
 .PHONY: k3d-start
 k3d-start: start-cluster k3d-push ## run make `k3d-start api_key=<your_api_key>` start k3d cluster and deploy local code
-	@helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-	@helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack
 	@helm install ${IMAGE_NAME} ${ROOT_DIR}charts/${IMAGE_NAME}  \
 		--set image.repository=registry.localhost:5000/${IMAGE_NAME} --set image.tag=${IMAGE_VERSION} \
-		-f ${ROOT_DIR}test/configmap-defaults.yaml \
-		--set gpsServices.tomTomService.apiKey=${TOM_TOM_API_KEY}
+		-f ${ROOT_DIR}test/configmap-defaults.yaml
 
 .PHONY: k3d-stop
 k3d-stop: ## stop K3d
