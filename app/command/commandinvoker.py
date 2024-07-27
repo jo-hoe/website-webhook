@@ -1,3 +1,4 @@
+import json
 import logging
 import requests
 
@@ -22,7 +23,7 @@ class CommandInvoker:
         request = None
         for command in self.commands:
             triggerCallback = command.execute()
-        
+
         if triggerCallback:
             request = self._build_request()
 
@@ -68,6 +69,11 @@ class CommandInvoker:
             templatedHeaders = self._template(self.callback.headers, command)
             templatedBody = self._template(self.callback.body, command)
 
+        data = {
+            body.name: body.value
+            for body in templatedBody
+        }
+
         request = requests.Request(
             method=self.callback.method.upper(),
             url=self.callback.url,
@@ -75,10 +81,7 @@ class CommandInvoker:
                 header.name: header.value
                 for header in templatedHeaders
             },
-            data={
-                body.name: body.value
-                for body in templatedBody
-            })
+            data=json.dumps(data))
 
         return request.prepare()
 
