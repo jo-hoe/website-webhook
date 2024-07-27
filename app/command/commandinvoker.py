@@ -77,9 +77,9 @@ class CommandInvoker:
             stop = response.ok or retry_count >= self.callback.retries
 
         if response.ok:
-            logging.info("request send successfully")
+            logging.info("Request send successfully")
         else:
             logging.error(
-                f"request send failed for this amount of calls {retry_count} last response {response.status_code}: {response.text}")
+                f"Request send failed for this amount of calls:{retry_count} last response: {response.status_code}: {response.text}")
 
         return response.status_code
