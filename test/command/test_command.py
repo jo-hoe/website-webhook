@@ -1,6 +1,7 @@
 
 
 from app.command.command import Command
+from app.scraper import Scraper
 
 
 class MockCommand(Command):
@@ -12,6 +13,6 @@ class MockCommand(Command):
 
 
 def test_replace_placeholder():
-    command = MockCommand("mock", "test-name", "test-url")
+    command = MockCommand("mock", "test-name", "test-url", Scraper())
     assert command.replace_placeholder(
         "<<kind>> <<commands.test-name.name>> <<url>>") == "mock test-name test-url", "replace_placeholder failed"

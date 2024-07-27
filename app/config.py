@@ -21,7 +21,6 @@ class Callback:
     def __init__(self, url: str, method: str, timeout: str, retries: int, headers: List[NameValuePair], body: List[NameValuePair]) -> None:
         self.url = url
         self.method = method
-        self.timeout = timeout
         self.retries = retries
         self.headers = headers
         self.body = body
@@ -44,7 +43,7 @@ class Config:
     commands: List[CommandConfig]
     callback: Callback
 
-    def __init__(self, interval: str, url: str, commands: List[Command], callback: Callback) -> None:
+    def __init__(self, interval: str, url: str, commands: List[CommandConfig], callback: Callback) -> None:
         self.interval = interval
         self.url = url
         self.commands = commands

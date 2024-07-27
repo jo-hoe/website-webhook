@@ -12,14 +12,19 @@ class CommandInvoker:
         self.commands = commands
         self.callback = callback
 
-    def executeAllCommands(self):
+    def execute_all_commands(self) -> bool:
+        """
+        returns True if successful, False otherwise 
+        """
         triggerCallback = False
 
         for command in self.commands:
             triggerCallback = command.execute()
 
         if triggerCallback:
-            self._send_callback()
+            return self._send_callback()
+
+        return False
 
     def _template(self, input: List[NameValuePair], command: Command) -> List[NameValuePair]:
         result = []
@@ -63,6 +68,8 @@ class CommandInvoker:
 
         if response.ok:
             logging.info("request send successfully")
+            return True
         else:
-            logging.error(f"request send failed {
-                          response.status_code}: {response.text}")
+            logging.error(
+                f"request send failed {response.status_code}: {response.text}")
+            return False

@@ -16,7 +16,7 @@ class TriggerCallbackOnChangedState(Command):
 
     def execute(self) -> bool:
         trigger_callback = False
-        current_value = scraper.scrape(self._url, self._xpath)
+        current_value = self._scraper.scrape(self._url, self._xpath)
 
         if self._old_value == None:
             self._old_value = current_value
