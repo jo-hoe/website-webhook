@@ -13,10 +13,13 @@ class CommandInvoker:
         self.callback = callback
 
     def executeAllCommands(self):
+        triggerCallback = False
+
         for command in self.commands:
             triggerCallback = command.execute()
-            if triggerCallback:
-                self._sendCallback()
+
+        if triggerCallback:
+            self._send_callback()
 
     def _template(self, input: List[NameValuePair], command: Command) -> List[NameValuePair]:
         result = []
@@ -30,7 +33,7 @@ class CommandInvoker:
 
         return result
 
-    def _sendCallback(self):
+    def _build_request(self):
         templatedHeaders = []
         templatedBody = []
 
@@ -38,7 +41,8 @@ class CommandInvoker:
             templatedHeaders = self._template(self.callback.headers, command)
             templatedBody = self._template(self.callback.body, command)
 
-        response = requests.post(
+        request = requests.Request(
+            method=self.callback.method.upper(),
             url=self.callback.url,
             headers={
                 header.name: header.value
@@ -47,10 +51,17 @@ class CommandInvoker:
             data={
                 body.name: body.value
                 for body in templatedBody
-            }
-        )
+            })
 
-        if response.status_code >= 200 and response.status_code <= 300:
+        return request.prepare()
+
+    def _send_callback(self):
+        request = self._build_request()
+        session = requests.Session()
+        response = session.send(request, timeout=self.callback.timeout,
+                                retries=self.callback.retries)
+
+        if response.ok:
             logging.info("request send successfully")
         else:
             logging.error(f"request send failed {
