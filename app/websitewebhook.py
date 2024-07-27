@@ -7,11 +7,8 @@ from app.config import Config, create_config
 from threading import Thread
 from time import sleep
 
-DEFAULT_CONFIG_PATH = "/run/config/config.yaml"
 
-
-def start():
-    config_path = os.getenv('CONFIG_PATH', DEFAULT_CONFIG_PATH)
+def start(config_path: str):
     config = create_config(config_path)
     thread = Thread(target=schedule_process, args=(config, ))
     thread.start()
@@ -23,8 +20,11 @@ def schedule_process(config: Config):
     logging.info("Scheduling process")
 
     while True:
-        logging.info("Executing commands")
-        invoker.execute_all_commands()
+        execute(invoker)
+        logging.info(f"Waiting {config.interval.seconds}s for next execution")
+        sleep(config.interval.seconds)
 
-        logging.info("Waiting for next execution")
-        sleep(config.interval)
+
+def execute(invoker: CommandInvoker):
+    logging.info("Executing commands")
+    invoker.execute_all_commands()

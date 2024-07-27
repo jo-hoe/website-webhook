@@ -22,10 +22,10 @@ class CommandInvoker:
             triggerCallback = command.execute()
 
         if triggerCallback:
-            logging.info("sending callback")
+            logging.info("Sending callback")
             return self._send_callback()
         else:
-            logging.info("no callback required")
+            logging.info("No callback required")
 
         return None
 

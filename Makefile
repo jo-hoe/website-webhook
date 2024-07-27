@@ -35,6 +35,10 @@ test: ## run all tests
 start: ## starts the service locally
 	${PYTHON_DIR}python main.py
 
+.PHONY: start-docker
+start-docker:
+	@docker compose -f ${ROOT_DIR}compose.yaml up --build 
+
 .PHONY: generate-helm-docs
 generate-helm-docs: ## re-generates helm docs using docker
 	@docker run --rm --volume "$(ROOT_DIR)charts:/helm-docs" jnorwood/helm-docs:latest

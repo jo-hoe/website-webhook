@@ -10,6 +10,6 @@ def create_command(data: dict, url) -> Command:
     name = data["name"]
 
     if TriggerCallbackOnChangedState.KIND.lower() == kind.lower():
-        return TriggerCallbackOnChangedState(TriggerCallbackOnChangedState.KIND, name, url, data["xpath"], Scraper())
+        return TriggerCallbackOnChangedState(name, url, data["xpath"], Scraper())
     else:
         raise NotImplementedError()
