@@ -14,14 +14,14 @@ def test_create_config():
     config = create_config(config_file_path)
 
     # general
-    assert config.interval == timedelta(minutes=3)
+    assert config.interval == timedelta(minutes=4)
     assert config.url == "https://myurl.com"
 
     # callback
     assert config.callback.url == "https://example.com/callback"
     assert config.callback.method == "POST"
     assert config.callback.timeout == timedelta(seconds=24)
-    assert config.callback.retries == 4
+    assert config.callback.retries == 3
     # callback headers
     assert len(config.callback.headers) == 1
     assert config.callback.headers[0].name == "Content-Type"
