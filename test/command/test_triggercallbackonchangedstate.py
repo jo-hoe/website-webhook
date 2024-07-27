@@ -1,6 +1,4 @@
 
-import re
-import pytest
 from app.command.triggercallbackonchangedstate import TriggerCallbackOnChangedState
 from test.mock import MockScraper
 

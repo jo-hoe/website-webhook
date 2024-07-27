@@ -3,13 +3,13 @@ from app import scraper
 from app.command.command import PLACEHOLDER_COMMANDS_PREFIX, Command
 from app.templating import template
 
-KIND = "TriggerCallbackOnChangedState"
-
 
 class TriggerCallbackOnChangedState(Command):
 
-    def __init__(self, name: str, url: str, xpath: str, scraper: scraper.Scraper) -> None:
-        super().__init__(KIND, name, url, scraper)
+    KIND = "triggerCallbackOnChangedState"
+
+    def __init__(self, kind: str, name: str, url: str, xpath: str, scraper: scraper.Scraper) -> None:
+        super().__init__(kind, name, url, scraper)
         self._xpath = xpath
         self._old_value = None
         self._new_value = None

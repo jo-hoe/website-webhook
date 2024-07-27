@@ -2,7 +2,7 @@
 from abc import ABC, abstractmethod
 
 from app.scraper import Scraper
-from app.templating import PLACEHOLDER_END, PLACEHOLDER_START, template
+from app.templating import template
 
 PLACEHOLDER_COMMANDS_PREFIX = "commands."
 
@@ -28,3 +28,4 @@ class Command(ABC):
             f"{PLACEHOLDER_COMMANDS_PREFIX}{self._name}.name", result, self._name)
 
         return result
+

@@ -1,7 +1,9 @@
 from datetime import timedelta
 from typing import List
 
+from app.command.commandcreator import create_command
 from app.duration import parse_duration
+from app.command.command import Command
 
 
 class NameValuePair:
@@ -30,25 +32,38 @@ class Callback:
         self.timeout = parse_duration(timeout)
 
 
-class CommandConfig:
-    kind: str
-    name: str
-    xpath: str
-
-    def __init__(self, kind: str, name: str, xpath: str) -> None:
-        self.kind = kind
-        self.name = name
-        self.xpath = xpath
-
-
 class Config:
     interval: timedelta
     url: str
-    commands: List[CommandConfig]
+    commands: List[Command]
     callback: Callback
 
-    def __init__(self, interval: str, url: str, commands: List[CommandConfig], callback: Callback) -> None:
+    def __init__(self, interval: str, url: str, commands: List[Command], callback: Callback) -> None:
         self.interval = parse_duration(interval)
         self.url = url
         self.commands = commands
         self.callback = callback
+
+
+def create_config(path_to_yaml: str) -> Config:
+    import yaml
+
+    with open(path_to_yaml, "r") as f:
+        config = yaml.safe_load(f)
+
+    interval = config.get("interval", "1h")
+    url = config.get("url", None)
+    commands = []
+    for command in config.get("commands", []):
+        commands.append(create_command(command, url))
+
+    callback = Callback(
+        url=config.get("callback", {}).get("url", None),
+        method=config.get("callback", {}).get("method", "POST").upper(),
+        timeout=config.get("callback", {}).get("timeout", "24s"),
+        retries=config.get("callback", {}).get("retries", 0),
+        headers=[NameValuePair(name=header.get("name", None), value=header.get("value", None)) for header in config.get("callback", {}).get("headers", [])],
+        body=[NameValuePair(name=body.get("name", None), value=body.get("value", None)) for body in config.get("callback", {}).get("body", [])],
+    )
+
+    return Config(interval=interval, url=url, commands=commands, callback=callback)
