@@ -2,6 +2,7 @@ include help.mk
 
 # get root dir
 ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+PYTHON_DIR := ${ROOT_DIR}.venv/Scripts/
 IMAGE_NAME := "website-webhook"
 IMAGE_VERSION := "1.0.0"
 
@@ -20,19 +21,23 @@ pull:
 
 .PHONY: update
 update: pull ## pulls git repo and installs all dependencies
-	${ROOT_DIR}.venv/Scripts/pip install -r ${ROOT_DIR}requirements.txt
+	${PYTHON_DIR}pip install -r ${ROOT_DIR}requirements.txt
 
 .PHONY: save-dependencies
 save-dependencies: ## save current dependencies
-	${ROOT_DIR}.venv/Scripts/pip freeze > ${ROOT_DIR}requirements.txt
+	${PYTHON_DIR}pip freeze > ${ROOT_DIR}requirements.txt
 
+.PHONY: test
+test: ## run python tests
+	${PYTHON_DIR}pytest $(ROOT_DIR)test/
+	
 .PHONY: start
 start: ## starts the service locally
-	@python main.py
+	${PYTHON_DIR}python main.py
 
 .PHONY: generate-helm-docs
 generate-helm-docs: ## re-generates helm docs using docker
-	@docker run --rm --volume "$(ROOT_DIR)/charts:/helm-docs" jnorwood/helm-docs:latest
+	@docker run --rm --volume "$(ROOT_DIR)charts:/helm-docs" jnorwood/helm-docs:latest
 
 .PHONY: start-cluster
 start-cluster: # starts k3d cluster and registry

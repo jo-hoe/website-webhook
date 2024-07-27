@@ -6,13 +6,13 @@ from app.templating import PLACEHOLDER_END, PLACEHOLDER_START, template
 
 class TriggerCallbackOnChangedState(Command):
 
-    def __init__(self, kind: str, name: str, xpath: str) -> None:
-        super().__init__(kind, name)
+    def __init__(self, kind: str, name: str, url: str, xpath: str) -> None:
+        super().__init__(kind, name, url)
         self.xpath = xpath
         self.old_value = None
 
-    def execute(self, url: str) -> bool:
-        new_value = scraper(url, self.xpath)
+    def execute(self) -> bool:
+        new_value = scraper(self.url, self.xpath)
 
         if self.old_value == None:
             # first call
@@ -29,7 +29,7 @@ class TriggerCallbackOnChangedState(Command):
     def replace_placeholder(self, input: str) -> str:
         result = super().replace_placeholder(input)
 
-        result = template(f"{PLACEHOLDER_START}{PLACEHOLDER_COMMANDS_PREFIX}.{self.name}{PLACEHOLDER_END}.old", result, self.old_value)
-        result = template(f"{PLACEHOLDER_START}{PLACEHOLDER_COMMANDS_PREFIX}.{self.name}{PLACEHOLDER_END}.new", result, self.new_value)
+        result = template(f"{PLACEHOLDER_COMMANDS_PREFIX}.{self.name}.old", result, self.old_value)
+        result = template(f"{PLACEHOLDER_COMMANDS_PREFIX}.{self.name}.new", result, self.new_value)
 
         return result
