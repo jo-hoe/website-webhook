@@ -66,13 +66,20 @@ class CommandInvoker:
     def _send_callback(self) -> int:
         request = self._build_request()
         session = requests.Session()
-        response = session.send(request, timeout=self.callback.timeout.seconds,
-                                retries=self.callback.retries)
+
+        stop = False
+        retry_count = 0
+
+        while not stop:
+            response = session.send(
+                request, timeout=self.callback.timeout.seconds)
+            retry_count += 1
+            stop = response.ok or retry_count >= self.callback.retries
 
         if response.ok:
             logging.info("request send successfully")
         else:
             logging.error(
-                f"request send failed {response.status_code}: {response.text}")
+                f"request send failed for this amount of calls {retry_count} last response {response.status_code}: {response.text}")
 
         return response.status_code
