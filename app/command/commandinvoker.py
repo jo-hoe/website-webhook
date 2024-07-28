@@ -95,7 +95,7 @@ class CommandInvoker:
             response = session.send(
                 request, timeout=self.callback.timeout.seconds)
             retry_count += 1
-            stop = response.ok or retry_count >= self.callback.retries
+            stop = response.ok or retry_count > self.callback.retries
 
         if response.ok:
             logging.info("Request send successfully")

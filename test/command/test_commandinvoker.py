@@ -8,7 +8,7 @@ from test.mock import MockCommand, MockScraper
 
 @pytest.mark.integration_test
 @responses.activate
-def test_command_invoker():
+def test_commandinvoker_execute_all_commands():
     callback_test_url = "http://example.com/api/123"
     callback_test_method = responses.POST
 
@@ -37,3 +37,35 @@ def test_command_invoker():
     assert invoker.execute_all_commands(
     ) == None, "execute_all_commands return unexpected value"
     assert invoker.execute_all_commands() == 200, "call unsuccessful"
+
+
+@pytest.mark.integration_test
+@responses.activate
+def test_commandinvoker_retries():
+    callback_test_url = "http://example.com/api/123"
+    callback_test_method = responses.POST
+
+    # callback mocking
+    response = responses.add(**{
+        'method': callback_test_method,
+        'url': callback_test_url,
+        'body': '{}',
+        'status': 500,
+        'content_type': 'application/json',
+        'adding_headers': {'X-Foo': 'Bar'}
+    })
+
+    command = MockCommand("mock", "test-name", "test-url",
+                          MockScraper(["a", "b"]), return_values=[True])
+    callback = Callback(
+        url=callback_test_url,
+        method=callback_test_method,
+        retries=2,
+        timeout="12s",
+        headers=[],
+        body=[]
+    )
+    invoker = CommandInvoker([command], callback)
+
+    assert invoker.execute_all_commands() == 500, "call unsuccessful"
+    assert response.call_count == callback.retries + 1, "unexpected number of calls"
