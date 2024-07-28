@@ -12,8 +12,8 @@ interval: "3m" # interval* between command execution, default is every 3 minutes
 url: "https://myurl.com"
 commands:
   - kind: "triggerCallbackOnChangedState" # provides name, xpath, kind + old and new value for templating
-    name: "changedState"
-    xpath: "//a[@class='some class']/text()"
+    name: "changedState" # arbitrary name for the command, used for templating
+    xpath: "//a[@class='some class']/text()" # specify which element to trigger on via xpath syntax (first element will be matched)
 callback:
   url: "https://example.com/callback" # callback url
   method: "POST" # method of the callback, has to be provided as uppercase string
