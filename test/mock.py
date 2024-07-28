@@ -17,8 +17,10 @@ class MockScraper(Scraper):
 
 class MockCommand(Command):
 
-    def __init__(self, kind: str, name: str, url: str, scraper: Scraper, return_values: List[bool] = [True]) -> None:
-        super().__init__(kind, name, url, scraper)
+    KIND = "mockCommand"
+
+    def __init__(self, name: str, url: str, scraper: Scraper, return_values: List[bool] = [True]) -> None:
+        super().__init__(self.KIND, name, url, scraper)
         self._return_values = return_values
         self._index = 0
 
