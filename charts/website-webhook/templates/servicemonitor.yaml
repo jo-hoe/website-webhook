@@ -1,0 +1,16 @@
+{{- if .Values.serviceMonitor.create -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "website-webhook.fullname" . }}
+  labels:
+    release: {{ .Values.serviceMonitor.release }}
+    {{- include "website-webhook.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "website-webhook.selectorLabels" . | nindent 6 }}
+  endpoints:
+  - port: {{ .Values.service.portName }}
+    interval: {{ .Values.serviceMonitor.interval }}
+{{- end }}

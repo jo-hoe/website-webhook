@@ -26,17 +26,29 @@ callback:
   #   value: "The value on page <<url>> changed from '<<commands.changedState.old>>' to '<<commands.changedState.new>>'"
   body: []
 
+# -- The following describes the configuration of the service monitor
+serviceMonitor:
+  # -- Whether to create a service monitor for the service
+  create: true
+  # -- The interval at which the metrics will be scraped
+  interval: 10m
+  # -- Name of the prometheus release label. Should equal the release name of the according prometheus.
+  release: kube-prometheus-stack
+
 image:
   repository: ghcr.io/jo-hoe/website-webhook
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
-probePort: 8000
-
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  portName: metrics
+  port: 8010
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -73,7 +85,9 @@ resources: {}
   #   memory: 128Mi
   # requests:
   #   cpu: 100m
-  #   memory: 128Mi
+  #   memory: 128M
+
+probePort: 8000
 
 livenessProbe:
   httpGet:

@@ -49,6 +49,8 @@ start-cluster: # starts k3d cluster and registry
 
 .PHONY: start-k3d
 start-k3d: start-cluster push-k3d ## run make `start-k3d api_key=<your_api_key>` start k3d cluster and deploy local code
+	@helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+	@helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack
 	@helm install ${IMAGE_NAME} ${ROOT_DIR}charts/${IMAGE_NAME}  \
 		--set image.repository=registry.localhost:5000/${IMAGE_NAME} --set image.tag=${IMAGE_VERSION} \
 		-f ${ROOT_DIR}dev/config.yaml
