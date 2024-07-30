@@ -1,6 +1,6 @@
 # website-webhook
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -36,10 +36,17 @@ A Helm chart for Kubernetes
 | readinessProbe.httpGet.port | string | `"http"` |  |
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
+| service.port | int | `8010` |  |
+| service.portName | string | `"metrics"` |  |
+| service.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.automount | bool | `true` |  |
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `""` |  |
+| serviceMonitor | object | `{"create":true,"interval":"10m","release":"kube-prometheus-stack"}` | The following describes the configuration of the service monitor |
+| serviceMonitor.create | bool | `true` | Whether to create a service monitor for the service |
+| serviceMonitor.interval | string | `"10m"` | The interval at which the metrics will be scraped |
+| serviceMonitor.release | string | `"kube-prometheus-stack"` | Name of the prometheus release label. Should equal the release name of the according prometheus. |
 | tolerations | list | `[]` |  |
 | url | string | `""` |  |
 
