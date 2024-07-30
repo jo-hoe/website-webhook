@@ -6,26 +6,20 @@ from lxml import etree
 class Scraper:
 
     def scrape(self, url: str, xpath: str) -> str:
-        try:
-            scraper = cloudscraper.create_scraper()
-            response = scraper.get(url)
-            if not response.ok:
-                logging.error(f"could not read {url} status: {
-                              response.status_code}")
-                return None
-        except BaseException as error:
-            logging.error(f"could not read {url} error: {error}")
-            return None
+        # request to webpage
+        scraper = cloudscraper.create_scraper()
+        response = scraper.get(url)
+        if not response.ok:
+            raise Exception(f"could not read {url} status: {
+                response.status_code}")
 
+        # xpath parsing
         tree = etree.HTML(response.text)
         if tree is None:
-            logging.error(f"could not parse '{url}'")
-            return None
-
+            raise Exception(f"could not parse '{url}'")
         result = tree.xpath(xpath)
         if len(result) == 0:
-            logging.error(f"did not find '{xpath}' in '{url}'")
-            return None
+            raise Exception(f"did not find '{xpath}' in '{url}'")
         elif len(result) > 1:
             logging.info(f"found more than one '{xpath}' in '{
                          url}' returning first one")

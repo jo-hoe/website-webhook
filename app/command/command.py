@@ -28,4 +28,11 @@ class Command(ABC):
             f"{PLACEHOLDER_COMMANDS_PREFIX}{self._name}.name", result, self._name)
 
         return result
+    
+    @property
+    def name(self) -> str:
+        return self._name
 
+
+class CommandException(Exception):
+    pass

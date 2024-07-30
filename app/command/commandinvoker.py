@@ -1,9 +1,11 @@
 import json
 import logging
+from prometheus_client import Counter
 import requests
 
 from typing import List
 from app.command.command import Command
+from app.command.prometheus_collector import CollectorManager, ExecutionStatus
 from app.config import Callback, NameValuePair
 
 
@@ -14,15 +16,20 @@ class CommandInvoker:
         self.callback = callback
         self.cached_request = None
 
-    def execute_all_commands(self) -> int:
-        """
-        returns response code of callback, if no callback is required returns None 
-        """
+    def execute_all_commands(self) -> None:
         triggerCallback = False
 
         request = None
         for command in self.commands:
-            triggerCallback = command.execute()
+            try:
+                triggerCallback = command.execute()
+                CollectorManager.inc_command_execution(
+                    ExecutionStatus.SUCCESS)
+            except Exception as ex:
+                CollectorManager.inc_command_execution(
+                    ExecutionStatus.FAILURE)
+                logging.error(
+                    f"command {command.name} failed due to exception {ex}")
 
         if triggerCallback:
             request = self._build_request()
@@ -33,9 +40,15 @@ class CommandInvoker:
 
         if request is not None:
             logging.info("Sending callback")
-            response_code = self._send_callback(request)
+            success = self._send_callback(request)
+            if success:
+                CollectorManager.inc_callback_execution(
+                    ExecutionStatus.SUCCESS)
+            else:
+                CollectorManager.inc_callback_execution(
+                    ExecutionStatus.FAILURE)
 
-            if response_code <= 400:
+            if success:
                 logging.info("Callback sent successfully")
                 self.cached_request = None
             else:
@@ -43,11 +56,9 @@ class CommandInvoker:
                     f"Callback send failed, caching request")
                 self.cached_request = request
 
-            return response_code
+            return success
         else:
             logging.info("No callback required")
-
-        return None
 
     def _template(self, input: List[NameValuePair], command: Command) -> List[NameValuePair]:
         result = []
@@ -85,22 +96,26 @@ class CommandInvoker:
 
         return request.prepare()
 
-    def _send_callback(self, request) -> int:
+    def _send_callback(self, request: requests.PreparedRequest) -> bool:
+        success = False
         session = requests.Session()
 
-        stop = False
         retry_count = 0
-
+        stop = False
         while not stop:
-            response = session.send(
-                request, timeout=self.callback.timeout.seconds)
+            response = None
+            try:
+                response = session.send(
+                    request, timeout=self.callback.timeout.seconds)
+            except BaseException as ex:
+                logging.error(f"Request send failed: {ex}")
             retry_count += 1
-            stop = response.ok or retry_count > self.callback.retries
+            stop = (response and response.ok) or retry_count > self.callback.retries
 
-        if response.ok:
-            logging.info("Request send successfully")
-        else:
-            logging.error(
-                f"Request send failed for this amount of calls:{retry_count} last response: {response.status_code}: {response.text}")
+        if response is not None:
+            if not response.ok:
+                logging.error(
+                    f"Request send failed {response.status_code}: {response.reason}")
+            success = response.ok
 
-        return response.status_code
+        return success

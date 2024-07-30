@@ -1,11 +1,24 @@
 import ast
-from typing import Mapping
+from prometheus_client import REGISTRY
 import pytest
 import responses
 
+from app.command.prometheus_collector import CollectorManager, ExecutionStatus
 from app.config import Callback, NameValuePair
 from app.command.commandinvoker import CommandInvoker
 from test.mock import MockCommand, MockScraper
+
+
+# prepare test environment up to yield
+# tear down test environment after yield
+@pytest.fixture(autouse=True)
+def setup_collectors():
+    CollectorManager.register_collectors()
+    yield
+    # Clear the registry after all tests
+    REGISTRY._collector_to_names.clear()
+    REGISTRY._names_to_collectors.clear()
+    CollectorManager._collectors.clear()
 
 
 @pytest.mark.integration_test
@@ -36,9 +49,13 @@ def test_commandinvoker_execute_all_commands():
     )
     invoker = CommandInvoker([command], callback)
 
-    assert invoker.execute_all_commands(
-    ) == None, "execute_all_commands return unexpected value"
-    assert invoker.execute_all_commands() == 200, "call unsuccessful"
+    invoker.execute_all_commands()
+    invoker.execute_all_commands()
+
+    assert REGISTRY.get_sample_value(f'{CollectorManager.CALLBACK_EXECUTION}_total', {
+                                     'status': ExecutionStatus.SUCCESS.value}) == 1
+    assert REGISTRY.get_sample_value(f'{CollectorManager.CALLBACK_EXECUTION}_total', {
+                                     'status': ExecutionStatus.FAILURE.value}) == None
 
 
 @pytest.mark.integration_test
@@ -69,7 +86,8 @@ def test_commandinvoker_retries():
     )
     invoker = CommandInvoker([command], callback)
 
-    assert invoker.execute_all_commands() == 500, "call unsuccessful"
+    invoker.execute_all_commands()
+    
     assert response.call_count == callback.retries + 1, "unexpected number of calls"
 
 
@@ -107,12 +125,11 @@ def test_commandinvoker_replace_placeholder():
     )
     invoker = CommandInvoker([command], callback)
 
-    assert invoker.execute_all_commands() == 200, "call unsuccessful"
-    assert response.call_count == 1, "unexpected number of calls"
+    invoker.execute_all_commands()
     
+    assert response.call_count == 1, "unexpected number of calls"
     assert response.calls[0].request.headers["header1"] == "test-url", "unexpected header"
     assert response.calls[0].request.headers["header2"] == "test-name", "unexpected header"
-
     body = ast.literal_eval(response.calls[0].request.body)
     assert body["body1"] == "test-url", "unexpected body"
     assert body["body2"] == "test-name", "unexpected body"

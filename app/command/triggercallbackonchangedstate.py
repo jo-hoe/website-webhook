@@ -1,7 +1,7 @@
 
 import logging
 from app import scraper
-from app.command.command import PLACEHOLDER_COMMANDS_PREFIX, Command
+from app.command.command import PLACEHOLDER_COMMANDS_PREFIX, Command, CommandException
 from app.templating import template
 
 
@@ -16,10 +16,15 @@ class TriggerCallbackOnChangedState(Command):
         self._new_value = None
 
     def execute(self) -> bool:
-        logging.info(f"Last seen value: '{self._old_value}'")
         trigger_callback = False
+        logging.info(f"Last seen value: '{self._old_value}'")
         current_value = self._scraper.scrape(self._url, self._xpath)
         logging.info(f"Current value: '{current_value}'")
+
+        if current_value == None:
+            logging.error(f"Could not read value for xpath '{self._xpath}'")
+            raise CommandException(
+                f"Could not read value for xpath '{self._xpath}'")
 
         if self._old_value == None:
             self._old_value = current_value
