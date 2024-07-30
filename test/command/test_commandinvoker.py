@@ -31,10 +31,7 @@ def test_commandinvoker_execute_all_commands():
     responses.add(**{
         'method': callback_test_method,
         'url': callback_test_url,
-        'body': '{}',
-        'status': 200,
-        'content_type': 'application/json',
-        'adding_headers': {'X-Foo': 'Bar'}
+        'status': 200
     })
 
     command = MockCommand("test-name", "test-url",
@@ -56,6 +53,8 @@ def test_commandinvoker_execute_all_commands():
                                      'status': ExecutionStatus.SUCCESS.value}) == 1
     assert REGISTRY.get_sample_value(f'{CollectorManager.CALLBACK_EXECUTION}_total', {
                                      'status': ExecutionStatus.FAILURE.value}) == None
+    assert REGISTRY.get_sample_value(f'{CollectorManager.COMMAND_EXECUTION}_total', {
+                                     'status': ExecutionStatus.SUCCESS.value}) == 2
 
 
 @pytest.mark.integration_test
@@ -68,10 +67,7 @@ def test_commandinvoker_retries():
     response = responses.add(**{
         'method': callback_test_method,
         'url': callback_test_url,
-        'body': '{}',
-        'status': 500,
-        'content_type': 'application/json',
-        'adding_headers': {'X-Foo': 'Bar'}
+        'status': 500
     })
 
     command = MockCommand("test-name", "test-url",
@@ -87,8 +83,10 @@ def test_commandinvoker_retries():
     invoker = CommandInvoker([command], callback)
 
     invoker.execute_all_commands()
-    
+
     assert response.call_count == callback.retries + 1, "unexpected number of calls"
+    assert REGISTRY.get_sample_value(f'{CollectorManager.COMMAND_EXECUTION}_total', {
+                                     'status': ExecutionStatus.SUCCESS.value}) == 1
 
 
 @pytest.mark.integration_test
@@ -101,10 +99,7 @@ def test_commandinvoker_replace_placeholder():
     response = responses.add(**{
         'url': callback_test_url,
         'method': callback_test_method,
-        'body': '{}',
-        'status': 200,
-        'content_type': 'application/json',
-        'adding_headers': {'X-Foo': 'Bar'}
+        'status': 200
     })
 
     command = MockCommand("test-name", "test-url",
@@ -126,10 +121,48 @@ def test_commandinvoker_replace_placeholder():
     invoker = CommandInvoker([command], callback)
 
     invoker.execute_all_commands()
-    
+
     assert response.call_count == 1, "unexpected number of calls"
     assert response.calls[0].request.headers["header1"] == "test-url", "unexpected header"
     assert response.calls[0].request.headers["header2"] == "test-name", "unexpected header"
     body = ast.literal_eval(response.calls[0].request.body)
     assert body["body1"] == "test-url", "unexpected body"
     assert body["body2"] == "test-name", "unexpected body"
+
+
+@pytest.mark.integration_test
+@responses.activate
+def test_commandinvoker_failing_commands():
+    callback_test_url = "http://example.com/api/123"
+    callback_test_method = responses.POST
+
+    # callback mocking
+    response = responses.add(**{
+        'method': callback_test_method,
+        'url': callback_test_url,
+        'body': '{}',
+        'status': 200,
+        'content_type': 'application/json'
+    })
+
+    exception_command = MockCommand("failing-command", "test-url",
+                                    MockScraper([""]), return_values=[False], raise_exception=True)
+    successful_command = MockCommand("successful-command", "test-url",
+                                     MockScraper([""]), return_values=[False], raise_exception=False)
+    callback = Callback(
+        url=callback_test_url,
+        method=callback_test_method,
+        retries=2,
+        timeout="12s",
+        headers=[],
+        body=[]
+    )
+    invoker = CommandInvoker([successful_command, exception_command, successful_command], callback)
+
+    invoker.execute_all_commands()
+
+    assert response.call_count == 0, "unexpected number of calls"
+    assert REGISTRY.get_sample_value(f'{CollectorManager.COMMAND_EXECUTION}_total', {
+                                     'status': ExecutionStatus.FAILURE.value}) == 1
+    assert REGISTRY.get_sample_value(f'{CollectorManager.COMMAND_EXECUTION}_total', {
+                                     'status': ExecutionStatus.SUCCESS.value}) == 1

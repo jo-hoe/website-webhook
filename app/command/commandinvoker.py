@@ -29,7 +29,8 @@ class CommandInvoker:
                 CollectorManager.inc_command_execution(
                     ExecutionStatus.FAILURE)
                 logging.error(
-                    f"command {command.name} failed due to exception {ex}")
+                    f"Command {command.name} failed due to exception {ex}. Cancelling execution.")
+                return
 
         if triggerCallback:
             request = self._build_request()
