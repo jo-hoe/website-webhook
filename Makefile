@@ -6,7 +6,7 @@ PYTHON_DIR := ${ROOT_DIR}.venv/Scripts/
 IMAGE_NAME := "website-webhook"
 IMAGE_VERSION := "1.0.0"
 
-.DEFAULT_GOAL := start
+.DEFAULT_GOAL := start-docker
 
 .PHONY: init
 init: venv update ## init setup of project after checkout
@@ -30,10 +30,6 @@ save-dependencies: ## save current dependencies
 .PHONY: test
 test: ## run all tests
 	${PYTHON_DIR}pytest $(ROOT_DIR)test/
-	
-.PHONY: start
-start: ## starts the service locally
-	${PYTHON_DIR}python main.py
 
 .PHONY: start-docker
 start-docker:
