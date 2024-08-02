@@ -61,12 +61,12 @@ If you run on Windows, you can directly install it from [gnuwin32](https://gnuwi
 winget install GnuWin32.Make
 ```
 
-Futhermore you will need Docker and Python.
-Run `make init` to install all dependencies in a virtual python environment.
+You will also need Docker and Python.
+Run `make init` to install all dependencies in a virtual Python environment.
 
 ### How to Use
 
-You can check all `make` commands by running
+You can check all `make` commands by running.
 
 ```bash
 make help
@@ -83,9 +83,9 @@ make start
 
 ### K3D
 
-[Install K3D](https://k3d.io/#install-script) to run the service in a local kubernetes cluster.
+[Install K3D](https://k3d.io/#install-script) to run the service in a local Kubernetes cluster.
 Ensure your [turned on Kubernetes in Docker Desktop](https://docs.docker.com/desktop/kubernetes/#install-and-turn-on-kubernetes).
-Run the following command to start the service in a local kubernetes cluster.
+Run the following command to start the service in a local Kubernetes cluster.
 
 ```bash
 make start-k3d
