@@ -29,7 +29,7 @@ callback:
     value: "The value on page <<url>> changed from '<<commands.changedState.old>>' to '<<commands.changedState.new>>'"
 ```
 
-`intervals` and `timeout` only support certain string formats. See below
+\* `intervals` and `timeout` only support certain string formats. As seen below:
 
 |string|interval|
 |---|---|
