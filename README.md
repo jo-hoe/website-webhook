@@ -11,9 +11,12 @@ Provides a helm chart for K8s deployments.
 interval: "3m" # interval* between command execution, default is every 3 minutes
 url: "https://myurl.com"
 commands:
-  - kind: "triggerCallbackOnChangedState" # provides name, xpath, kind + old and new value for templating
+  - kind: "getXPathValue" # provides name, xpath, kind and value and will never trigger a callback
+    name: "value" # arbitrary name for the command, used for templating
+    xpath: "//a[@class='some class']/text()" # value that will be retrieved for templating
+  - kind: "triggerCallbackOnChangedState" # provides name, xpath, kind + old and new value for templating, triggers callback when value changes
     name: "changedState" # arbitrary name for the command, used for templating
-    xpath: "//a[@class='some class']/text()" # specify which element to trigger on via xpath syntax (first element will be matched)
+    xpath: "//a[@class='some other class']/text()" # specify which element to trigger on via xpath syntax (first element will be matched)
 callback:
   url: "https://example.com/callback" # callback url
   method: "POST" # method of the callback, has to be provided as uppercase string
@@ -49,6 +52,7 @@ The the values of `callback.body` and `callback.headers` allow for templating wi
 | `<<commands.{command_name}.xpath>>` | `triggerCallbackOnChangedState` | set to the xpath of the command |
 | `<<commands.{command_name}.old>>` | `triggerCallbackOnChangedState` | the old value of the xpath |
 | `<<commands.{command_name}.new>>` | `triggerCallbackOnChangedState` | the new value of the xpath |
+| `<<commands.{command_name}.value>>` | `#getXPathValue` | value of the xpath |
 
 ## Prerequisites to run locally
 

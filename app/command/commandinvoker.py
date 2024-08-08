@@ -1,6 +1,5 @@
 import json
 import logging
-from prometheus_client import Counter
 import requests
 
 from typing import List
@@ -29,7 +28,7 @@ class CommandInvoker:
                 CollectorManager.inc_command_execution(
                     ExecutionStatus.FAILURE)
                 logging.error(
-                    f"Command {command.name} failed due to exception {ex}. Cancelling execution.")
+                    f"Command '{command.name}' failed due to exception '{ex}'. Cancelling execution.")
                 return
 
         if triggerCallback:

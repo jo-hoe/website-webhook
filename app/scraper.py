@@ -13,8 +13,16 @@ class Scraper:
             raise Exception(f"could not read {url} status: {
                 response.status_code}")
 
+        encoded_response = response.text.encode('utf-8')
+
         # xpath parsing
-        tree = etree.HTML(response.text)
+        tree = None
+        # check if response is pure xml text
+        if response.headers['content-type'] and "text/xml" in response.headers['content-type']:
+            tree = etree.XML(encoded_response)
+        else:
+            tree = etree.HTML(encoded_response)
+
         if tree is None:
             raise Exception(f"could not parse '{url}'")
         result = tree.xpath(xpath)
