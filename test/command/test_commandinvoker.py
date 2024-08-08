@@ -52,7 +52,7 @@ def test_commandinvoker_execute_all_commands():
     assert REGISTRY.get_sample_value(f'{CollectorManager.CALLBACK_EXECUTION}_total', {
                                      'status': ExecutionStatus.SUCCESS.value}) == 1
     assert REGISTRY.get_sample_value(f'{CollectorManager.CALLBACK_EXECUTION}_total', {
-                                     'status': ExecutionStatus.FAILURE.value}) == None
+                                     'status': ExecutionStatus.FAILURE.value}) == 0
     assert REGISTRY.get_sample_value(f'{CollectorManager.COMMAND_EXECUTION}_total', {
                                      'status': ExecutionStatus.SUCCESS.value}) == 2
 

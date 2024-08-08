@@ -19,14 +19,16 @@ class CollectorManager:
 
     @classmethod
     def register_collectors(cls):
-        cls._create_collector(Counter(
+        possible_states = [state for state in ExecutionStatus]
+
+        cls._initialize_counter_with_labels(Counter(
             cls.CALLBACK_EXECUTION, "Counts number of performed callback calls", [
-                "status"]
-        ))
-        cls._create_collector(Counter(
+                "status"],
+        ), possible_states)
+        cls._initialize_counter_with_labels(Counter(
             cls.COMMAND_EXECUTION, "Counts failed command executions", [
                 "status"]
-        ))
+        ), possible_states)
 
     @classmethod
     def inc_callback_execution(cls, status: ExecutionStatus) -> None:
@@ -45,3 +47,13 @@ class CollectorManager:
     @classmethod
     def _create_collector(cls, collector: MetricWrapperBase) -> None:
         cls._collectors[collector._name] = collector
+
+    @classmethod
+    def _initialize_with_zero(cls, collector: MetricWrapperBase, flags: list[ExecutionStatus]) -> None:
+        for flag in flags:
+            collector.labels(flag.value).inc(0)
+
+    @classmethod
+    def _initialize_counter_with_labels(cls, collector: MetricWrapperBase, labels: list[str]) -> None:
+        cls._create_collector(collector)
+        cls._initialize_with_zero(collector, labels)
