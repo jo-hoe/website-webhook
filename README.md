@@ -52,7 +52,7 @@ The the values of `callback.body` and `callback.headers` allow for templating wi
 | `<<commands.{command_name}.xpath>>` | `triggerCallbackOnChangedState` | set to the xpath of the command |
 | `<<commands.{command_name}.old>>` | `triggerCallbackOnChangedState` | the old value of the xpath |
 | `<<commands.{command_name}.new>>` | `triggerCallbackOnChangedState` | the new value of the xpath |
-| `<<commands.{command_name}.value>>` | `#getXPathValue` | value of the xpath |
+| `<<commands.{command_name}.value>>` | `getXPathValue` | value of the xpath |
 
 ## Prerequisites to run locally
 
