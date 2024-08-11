@@ -8,7 +8,8 @@ Provides a helm chart for K8s deployments.
 ## Configuration
 
 ```yaml
-interval: "3m" # interval* between command execution, default is every 3 minutes
+cron: "3m" # cron between command execution, default is every 3 minutes
+executeOnStartUp: true # if set to true, the function will be executed on startup, default true
 url: "https://myurl.com"
 commands:
   - kind: "getXPathValue" # provides name, xpath, kind and value and will never trigger a callback
@@ -32,7 +33,7 @@ callback:
     value: "The value on page <<url>> changed from '<<commands.changedState.old>>' to '<<commands.changedState.new>>'"
 ```
 
-\* `intervals` and `timeout` only support certain string formats. As seen below:
+\* `timeout` only support certain string formats. As seen below:
 
 |string|interval|
 |---|---|

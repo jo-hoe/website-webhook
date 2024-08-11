@@ -1,3 +1,4 @@
+from datetime import date, datetime
 import pytest
 from prometheus_client import REGISTRY
 
@@ -19,6 +20,8 @@ def setup_collectors():
 def test_register_collectors():
     assert CollectorManager.CALLBACK_EXECUTION in CollectorManager._collectors
     assert CollectorManager.COMMAND_EXECUTION in CollectorManager._collectors
+    assert CollectorManager.LAST_COMMAND_EXECUTION in CollectorManager._collectors
+    assert CollectorManager.NEXT_COMMAND_EXECUTION in CollectorManager._collectors
 
 
 def test_inc_callback_execution_failure():
@@ -82,3 +85,17 @@ def test_different_statuses():
                                      'status': ExecutionStatus.SUCCESS.value}) == 1
     assert REGISTRY.get_sample_value(f'{CollectorManager.CALLBACK_EXECUTION}_total', {
                                      'status': ExecutionStatus.FAILURE.value}) == 1
+
+
+def test_set_last_command_execution():
+    test_time = datetime(2022, 12, 28, 23, 55, 59, 342380)
+    CollectorManager.set_last_command_execution(test_time)
+    assert REGISTRY.get_sample_value(
+        f'{CollectorManager.LAST_COMMAND_EXECUTION}') == test_time.timestamp()
+
+
+def test_set_next_command_execution():
+    test_time = datetime(2022, 12, 28, 23, 55, 59, 342380)
+    CollectorManager.set_next_command_execution(test_time)
+    assert REGISTRY.get_sample_value(
+        f'{CollectorManager.NEXT_COMMAND_EXECUTION}') == test_time.timestamp()

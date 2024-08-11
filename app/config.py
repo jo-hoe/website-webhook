@@ -1,3 +1,5 @@
+import yaml
+
 from datetime import timedelta
 from typing import List
 
@@ -33,26 +35,27 @@ class Callback:
 
 
 class Config:
-    interval: timedelta
+    cron: str
     url: str
+    execute_on_start: bool
     commands: List[Command]
     callback: Callback
 
-    def __init__(self, interval: str, url: str, commands: List[Command], callback: Callback) -> None:
-        self.interval = parse_duration(interval)
+    def __init__(self, cron: str, execute_on_start: bool, url: str, commands: List[Command], callback: Callback) -> None:
+        self.cron = cron
         self.url = url
+        self.execute_on_start = execute_on_start
         self.commands = commands
         self.callback = callback
 
 
 def create_config(path_to_yaml: str) -> Config:
-    import yaml
-
     with open(path_to_yaml, "r") as f:
         config = yaml.safe_load(f)
 
-    interval = config.get("interval", "1h")
+    cron = config.get("cron", "0 * * * *")
     url = config.get("url", None)
+    execute_on_start = config.get("executeOnStartUp", True)
     commands = []
     for command in config.get("commands", []):
         commands.append(create_command(command, url))
@@ -62,8 +65,10 @@ def create_config(path_to_yaml: str) -> Config:
         method=config.get("callback", {}).get("method", "POST").upper(),
         timeout=config.get("callback", {}).get("timeout", "24s"),
         retries=config.get("callback", {}).get("retries", 0),
-        headers=[NameValuePair(name=header.get("name", None), value=header.get("value", None)) for header in config.get("callback", {}).get("headers", [])],
-        body=[NameValuePair(name=body.get("name", None), value=body.get("value", None)) for body in config.get("callback", {}).get("body", [])],
+        headers=[NameValuePair(name=header.get("name", None), value=header.get(
+            "value", None)) for header in config.get("callback", {}).get("headers", [])],
+        body=[NameValuePair(name=body.get("name", None), value=body.get(
+            "value", None)) for body in config.get("callback", {}).get("body", [])],
     )
 
-    return Config(interval=interval, url=url, commands=commands, callback=callback)
+    return Config(cron=cron, url=url, execute_on_start=execute_on_start, commands=commands, callback=callback)

@@ -1,5 +1,6 @@
 from enum import Enum
-from prometheus_client import Counter
+from datetime import datetime
+from prometheus_client import Counter, Gauge
 from prometheus_client.metrics import MetricWrapperBase
 
 
@@ -17,6 +18,9 @@ class CollectorManager:
     CALLBACK_EXECUTION = "callback_execution"
     COMMAND_EXECUTION = "command_execution"
 
+    LAST_COMMAND_EXECUTION = "last_command_execution"
+    NEXT_COMMAND_EXECUTION = "next_command_execution"
+
     @classmethod
     def register_collectors(cls):
         possible_states = [state for state in ExecutionStatus]
@@ -30,6 +34,14 @@ class CollectorManager:
                 "status"]
         ), possible_states)
 
+        cls._create_collector(Gauge(
+            cls.LAST_COMMAND_EXECUTION, "Timestamp of the last command execution"
+        ))
+
+        cls._create_collector(Gauge(
+            cls.NEXT_COMMAND_EXECUTION, "Timestamp of the next command execution"
+        ))
+
     @classmethod
     def inc_callback_execution(cls, status: ExecutionStatus) -> None:
         cls._get_collector(cls.CALLBACK_EXECUTION).labels(
@@ -39,6 +51,14 @@ class CollectorManager:
     def inc_command_execution(cls, status: ExecutionStatus) -> None:
         cls._get_collector(cls.COMMAND_EXECUTION).labels(
             status.value).inc()
+
+    @classmethod
+    def set_last_command_execution(cls, timestamp: datetime) -> None:
+        cls._get_collector(cls.LAST_COMMAND_EXECUTION).set(timestamp.timestamp())
+
+    @classmethod
+    def set_next_command_execution(cls, timestamp: datetime) -> None:
+        cls._get_collector(cls.NEXT_COMMAND_EXECUTION).set(timestamp.timestamp())
 
     @classmethod
     def _get_collector(cls, collector_name: str) -> MetricWrapperBase:

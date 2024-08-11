@@ -5,7 +5,7 @@ from app.scraper import Scraper
 
 class MockScraper(Scraper):
 
-    def __init__(self, result_values: List[str]) -> None:
+    def __init__(self, result_values: List[str] = ["mock"]) -> None:
         self._result_values = result_values
         self._index = 0
 
@@ -19,7 +19,7 @@ class MockCommand(Command):
 
     KIND = "mockCommand"
 
-    def __init__(self, name: str, url: str, scraper: Scraper, return_values: List[bool] = [True], raise_exception: bool = False) -> None:
+    def __init__(self, name: str = "mock", url: str = "", scraper: Scraper = MockScraper(), return_values: List[bool] = [True], raise_exception: bool = False) -> None:
         super().__init__(self.KIND, name, url, scraper)
         self._return_values = return_values
         self._index = 0
