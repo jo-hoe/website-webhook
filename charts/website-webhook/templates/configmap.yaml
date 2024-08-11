@@ -6,7 +6,8 @@ metadata:
     {{- include "website-webhook.labels" . | nindent 4 }}
 data:
   config.yaml: |-
-    interval: {{ .Values.interval }}
+    cron: {{ .Values.cron }}
+    executeOnStartUp: {{ .Values.executeOnStartUp }}
     url: {{ .Values.url }}
     callback:
       url: {{ .Values.callback.url }}

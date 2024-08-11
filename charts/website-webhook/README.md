@@ -1,6 +1,6 @@
 # website-webhook
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -18,12 +18,13 @@ A Helm chart for Kubernetes
 | callback.method | string | `"POST"` | method for the callback |
 | callback.url | string | `""` | url for the callback |
 | commands | list | `[]` | commands for the webhook example: - kind: "triggerCallbackOnChangedState"   name: "changedState"   xpath: "//td[@id='p0']/text()" |
+| cron | string | `"0 * * * *"` | cron expression for scheduling of job |
+| executeOnStartUp | bool | `true` | if set to true, the function will be executed on startup |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"ghcr.io/jo-hoe/website-webhook"` |  |
 | image.tag | string | `""` |  |
 | imagePullSecrets | list | `[]` |  |
-| interval | string | `"1h"` |  |
 | livenessProbe.httpGet.path | string | `"/"` |  |
 | livenessProbe.httpGet.port | string | `"http"` |  |
 | nameOverride | string | `""` |  |
@@ -43,9 +44,9 @@ A Helm chart for Kubernetes
 | serviceAccount.automount | bool | `true` |  |
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `""` |  |
-| serviceMonitor | object | `{"create":true,"interval":"10m","release":"kube-prometheus-stack"}` | The following describes the configuration of the service monitor |
+| serviceMonitor | object | `{"create":true,"interval":"1m","release":"kube-prometheus-stack"}` | The following describes the configuration of the service monitor |
 | serviceMonitor.create | bool | `true` | Whether to create a service monitor for the service |
-| serviceMonitor.interval | string | `"10m"` | The interval at which the metrics will be scraped |
+| serviceMonitor.interval | string | `"1m"` | The interval at which the metrics will be scraped |
 | serviceMonitor.release | string | `"kube-prometheus-stack"` | Name of the prometheus release label. Should equal the release name of the according prometheus. |
 | tolerations | list | `[]` |  |
 | url | string | `""` |  |

@@ -2,7 +2,10 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-interval: 1h
+# -- cron expression for scheduling of job
+cron: "0 * * * *"
+# -- if set to true, the function will be executed on startup
+executeOnStartUp: true
 url: ""
 # -- commands for the webhook
 # example:
@@ -31,7 +34,7 @@ serviceMonitor:
   # -- Whether to create a service monitor for the service
   create: true
   # -- The interval at which the metrics will be scraped
-  interval: 10m
+  interval: 1m
   # -- Name of the prometheus release label. Should equal the release name of the according prometheus.
   release: kube-prometheus-stack
 
