@@ -8,7 +8,7 @@ Provides a helm chart for K8s deployments.
 ## Configuration
 
 ```yaml
-cron: "3m" # cron between command execution, default is every 3 minutes
+cron: "0 * * * *" # cron between command execution, default is every hour
 executeOnStartUp: true # if set to true, the function will be executed on startup, default true
 url: "https://myurl.com"
 commands:
