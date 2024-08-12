@@ -157,7 +157,8 @@ def test_commandinvoker_failing_commands():
         headers=[],
         body=[]
     )
-    invoker = CommandInvoker([successful_command, exception_command, successful_command], callback)
+    invoker = CommandInvoker(
+        [successful_command, exception_command, successful_command], callback)
 
     invoker.execute_all_commands()
 
@@ -166,3 +167,40 @@ def test_commandinvoker_failing_commands():
                                      'status': ExecutionStatus.FAILURE.value}) == 1
     assert REGISTRY.get_sample_value(f'{CollectorManager.COMMAND_EXECUTION}_total', {
                                      'status': ExecutionStatus.SUCCESS.value}) == 1
+
+
+@pytest.mark.integration_test
+@responses.activate
+def test_commandinvoker_send_html_link():
+    callback_test_url = "http://example.com/api/123"
+    callback_test_method = responses.POST
+
+    # callback mocking
+    response = responses.add(**{
+        'method': callback_test_method,
+        'url': callback_test_url,
+        'status': 200,
+        'content_type': 'application/json'
+    })
+
+    successful_command = MockCommand("successful-command", callback_test_url,
+                                     MockScraper([""]), return_values=[True], raise_exception=False)
+    callback = Callback(
+        url=callback_test_url,
+        method=callback_test_method,
+        retries=1,
+        timeout="5s",
+        headers=[],
+        body=[
+            NameValuePair(
+                "htmllink", '<a href="<<url>>">text</a>'
+            )
+        ]
+    )
+    invoker = CommandInvoker([successful_command], callback)
+
+    invoker.execute_all_commands()
+
+    assert response.call_count == 1, "unexpected number of calls"
+    expected = f'{{"htmllink": "<a href=\\"{callback_test_url}\\">text</a>"}}'
+    assert response.calls[0].request.body == expected, "unexpected body"
