@@ -33,7 +33,7 @@ class TriggerCallbackOnChangedState(Command):
 
         if self._new_value != current_value:
             logging.info(
-                f"Triggering callback with commands.old: '{self._new_value} and commands.new: '{current_value}'")
+                f"Triggering callback'")
             trigger_callback = True
 
         self._old_value = self._new_value
