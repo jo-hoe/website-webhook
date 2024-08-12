@@ -1,7 +1,5 @@
 
-import pytest
 from app.command.getxpathvalue import GetXPathValue
-from app.scraper import Scraper
 from test.mock import MockScraper
 
 
