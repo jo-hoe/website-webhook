@@ -204,3 +204,42 @@ def test_commandinvoker_send_html_link():
     assert response.call_count == 1, "unexpected number of calls"
     expected = f'{{"htmllink": "<a href=\\"{callback_test_url}\\">text</a>"}}'
     assert response.calls[0].request.body == expected, "unexpected body"
+
+@pytest.mark.integration_test
+@responses.activate
+def test_commandinvoker_multiple_commands():
+    callback_test_url = "http://example.com/api/123"
+    callback_test_method = responses.POST
+
+    # callback mocking
+    response = responses.add(**{
+        'method': callback_test_method,
+        'url': callback_test_url,
+        'status': 200,
+        'content_type': 'application/json'
+    })
+
+    command1 = MockCommand("command1", callback_test_url,
+                                     MockScraper([""]), return_values=[False], raise_exception=False)
+    command2 = MockCommand("command2", callback_test_url,
+                                     MockScraper([""]), return_values=[True], raise_exception=False)
+    
+    callback = Callback(
+        url=callback_test_url,
+        method=callback_test_method,
+        retries=1,
+        timeout="5s",
+        headers=[],
+        body=[
+            NameValuePair(
+                "key", '<<commands.command1.name>> <<commands.command2.name>>'
+            )
+        ]
+    )
+    invoker = CommandInvoker([command1, command2], callback)
+
+    invoker.execute_all_commands()
+
+    assert response.call_count == 1, "unexpected number of calls"
+    expected = f'{{"key": "command1 command2"}}'
+    assert response.calls[0].request.body == expected, "unexpected body"

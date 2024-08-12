@@ -73,25 +73,26 @@ class CommandInvoker:
         return result
 
     def _build_request(self):
-        templatedHeaders = []
-        templatedBody = []
+        templatedHeaders = self.callback.headers
+        templatedBody = self.callback.body
 
         for command in self.commands:
-            templatedHeaders = self._template(self.callback.headers, command)
-            templatedBody = self._template(self.callback.body, command)
+            templatedHeaders = self._template(templatedHeaders, command)
+            templatedBody = self._template(templatedBody, command)
 
         data = {
             body.name: body.value
             for body in templatedBody
         }
+        headers = {
+            header.name: header.value
+            for header in templatedHeaders
+        }
 
         request = requests.Request(
             method=self.callback.method.upper(),
             url=self.callback.url,
-            headers={
-                header.name: header.value
-                for header in templatedHeaders
-            },
+            headers=headers,
             data=json.dumps(data))
 
         return request.prepare()
