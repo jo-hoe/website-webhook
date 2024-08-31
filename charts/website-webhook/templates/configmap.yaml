@@ -6,12 +6,12 @@ metadata:
     {{- include "website-webhook.labels" . | nindent 4 }}
 data:
   config.yaml: |-
-    cron: {{ .Values.cron }}
+    cron: "{{ .Values.cron }}"
     executeOnStartUp: {{ .Values.executeOnStartUp }}
-    url: {{ .Values.url }}
+    url: "{{ .Values.url }}"
     callback:
-      url: {{ .Values.callback.url }}
-      method: {{ .Values.callback.method }}
+      url: "{{ .Values.callback.url }}"
+      method: "{{ .Values.callback.method }}"
       headers:
         {{- toYaml .Values.callback.headers | nindent 8 }}
       body:
