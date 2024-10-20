@@ -19,7 +19,7 @@ def setup_collectors():
     REGISTRY._collector_to_names.clear()
     REGISTRY._names_to_collectors.clear()
     CollectorManager._collectors.clear()
-    
+
 
 def mock_function(dummy=None):
     return True
@@ -31,6 +31,7 @@ def test_schedule_process():
         cron="*/1 * * * * *",
         execute_on_start=True,
         url=None,
+        enabled_javascript=False,
         commands=[MockCommand()],
         callback=Callback(
             body=[],
@@ -47,9 +48,9 @@ def test_schedule_process():
     thread.join()
 
     last_execution = REGISTRY.get_sample_value(
-        f'{CollectorManager.LAST_COMMAND_EXECUTION}') 
+        f'{CollectorManager.LAST_COMMAND_EXECUTION}')
     next_execution = REGISTRY.get_sample_value(
-        f'{CollectorManager.NEXT_COMMAND_EXECUTION}') 
-    
+        f'{CollectorManager.NEXT_COMMAND_EXECUTION}')
+
     assert last_execution > 0
     assert next_execution > 0

@@ -37,13 +37,16 @@ class Callback:
 class Config:
     cron: str
     url: str
+    enabled_javascript: bool
     execute_on_start: bool
     commands: List[Command]
     callback: Callback
 
-    def __init__(self, cron: str, execute_on_start: bool, url: str, commands: List[Command], callback: Callback) -> None:
+    def __init__(self, cron: str, execute_on_start: bool, url: str,
+                 enabled_javascript: bool, commands: List[Command], callback: Callback) -> None:
         self.cron = cron
         self.url = url
+        self.enabled_javascript = enabled_javascript
         self.execute_on_start = execute_on_start
         self.commands = commands
         self.callback = callback
@@ -56,9 +59,10 @@ def create_config(path_to_yaml: str) -> Config:
     cron = config.get("cron", "0 * * * *")
     url = config.get("url", None)
     execute_on_start = config.get("executeOnStartUp", True)
+    enabled_javascript = config.get("enableJavaScript", False)
     commands = []
     for command in config.get("commands", []):
-        commands.append(create_command(command, url))
+        commands.append(create_command(command, url, enabled_javascript))
 
     callback = Callback(
         url=config.get("callback", {}).get("url", None),
@@ -71,4 +75,5 @@ def create_config(path_to_yaml: str) -> Config:
             "value", None)) for body in config.get("callback", {}).get("body", [])],
     )
 
-    return Config(cron=cron, url=url, execute_on_start=execute_on_start, commands=commands, callback=callback)
+    return Config(cron=cron, url=url, execute_on_start=execute_on_start,
+                  enabled_javascript=enabled_javascript, commands=commands, callback=callback)

@@ -1,11 +1,11 @@
 
 import pytest
-from app.scraper import Scraper
+from app.scraper.default_scraper import DefaultScraper
 
 
 @pytest.mark.integration_test
 def test_scraper():
-    scraper = Scraper()
+    scraper = DefaultScraper()
     result = scraper.scrape(
         "https://pypi.org/project/cloudscraper/", "//h1[@class='package-header__name']/text()")
 
@@ -17,8 +17,8 @@ def test_scraper():
 def test_get_rss_feed():
     test_rss_url = "http://feeds.bbci.co.uk/news/world/rss.xml"
     
-    scraper = Scraper()
+    scraper = DefaultScraper()
     result = scraper.scrape(
         test_rss_url, "(//item/guid/text())[1]")
 
-    assert "http" in result, "scraper failed"
+    assert "www.bbc.com" in result, "scraper failed"

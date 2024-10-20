@@ -12,6 +12,7 @@ data:
     callback:
       url: "{{ .Values.callback.url }}"
       method: "{{ .Values.callback.method }}"
+      enableJavaScript: "{{ .Values.callback.enableJavaScript }}"
       headers:
         {{- toYaml .Values.callback.headers | nindent 8 }}
       body:

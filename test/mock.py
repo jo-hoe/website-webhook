@@ -1,6 +1,6 @@
 from typing import List
 from app.command.command import Command
-from app.scraper import Scraper
+from app.scraper.scraper import Scraper
 
 
 class MockScraper(Scraper):

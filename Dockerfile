@@ -5,9 +5,8 @@
 # https://docs.docker.com/go/dockerfile-reference/
 
 # Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
-
-ARG PYTHON_VERSION=3.12.4
-FROM python:${PYTHON_VERSION}-slim as base
+ARG PYTHON_VERSION=3.13.0
+FROM python:${PYTHON_VERSION}-alpine3.20
 
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -29,6 +28,15 @@ RUN adduser \
     --no-create-home \
     --uid "${UID}" \
     appuser
+
+# Set display port and dbus env to avoid hanging
+ENV DISPLAY=:99 \
+    DBUS_SESSION_BUS_ADDRESS=/dev/null
+
+# Add chromedriver and directories
+RUN apk add --no-cache chromium-chromedriver && \
+    mkdir -p /nonexistent/.cache/selenium && \
+    chown -R appuser /nonexistent/.cache/selenium
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.

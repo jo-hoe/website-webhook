@@ -1,6 +1,7 @@
 cron: "4 * * * *" # cron describing how often the function is run, default 1h
 executeOnStartUp: false # if set to true, the function will be executed on startup, default true
 url: "https://myurl.com"
+enableJavaScript: true
 commands:
   - kind: "triggerCallbackOnChangedState" # provides name, xpath, kind + old and new value for templating
     name: "changedState"

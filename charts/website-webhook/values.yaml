@@ -28,6 +28,8 @@ callback:
   # - name: "description"
   #   value: "The value on page <<url>> changed from '<<commands.changedState.old>>' to '<<commands.changedState.new>>'"
   body: []
+  # -- defines if javascript should be executed during the run
+  enableJavaScript: false
 
 # -- The following describes the configuration of the service monitor
 serviceMonitor:

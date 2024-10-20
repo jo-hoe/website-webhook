@@ -1,7 +1,7 @@
 
 from abc import ABC, abstractmethod
 
-from app.scraper import Scraper
+from app.scraper.scraper import Scraper
 from app.templating import template
 
 PLACEHOLDER_COMMANDS_PREFIX = "commands."

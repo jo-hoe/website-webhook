@@ -1,7 +1,7 @@
 
 import logging
-from app import scraper
 from app.command.command import PLACEHOLDER_COMMANDS_PREFIX, Command, CommandException
+from app.scraper.scraper import Scraper
 from app.templating import template
 
 
@@ -9,7 +9,7 @@ class TriggerCallbackOnChangedState(Command):
 
     KIND = "triggerCallbackOnChangedState"
 
-    def __init__(self, name: str, url: str, xpath: str, scraper: scraper.Scraper) -> None:
+    def __init__(self, name: str, url: str, xpath: str, scraper: Scraper) -> None:
         super().__init__(self.KIND, name, url, scraper)
         self._xpath = xpath
         self._old_value = None

@@ -2,8 +2,10 @@ import logging
 import cloudscraper
 from lxml import etree
 
+from app.scraper.scraper import Scraper
 
-class Scraper:
+
+class DefaultScraper(Scraper):
 
     def scrape(self, url: str, xpath: str) -> str:
         # request to webpage

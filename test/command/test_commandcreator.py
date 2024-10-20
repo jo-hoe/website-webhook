@@ -11,7 +11,7 @@ def test_create_trigger_callback_on_changed_state():
         "xpath": "c"
     }
 
-    command = create_command(data, "d")
+    command = create_command(data, "d", False)
 
     assert isinstance(command, TriggerCallbackOnChangedState)
     assert command._kind == TriggerCallbackOnChangedState.KIND
@@ -26,7 +26,7 @@ def test_create_get_xpath_value():
         "xpath": "c"
     }
 
-    command = create_command(data, "d")
+    command = create_command(data, "d", False)
 
     assert isinstance(command, GetXPathValue)
     assert command._kind == GetXPathValue.KIND

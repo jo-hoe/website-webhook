@@ -1,7 +1,7 @@
 
 import logging
-from app import scraper
 from app.command.command import PLACEHOLDER_COMMANDS_PREFIX, Command, CommandException
+from app.scraper.scraper import Scraper
 from app.templating import template
 
 
@@ -9,11 +9,10 @@ class GetXPathValue(Command):
 
     KIND = "getXPathValue"
 
-    def __init__(self, name: str, url: str, xpath: str, scraper: scraper.Scraper) -> None:
+    def __init__(self, name: str, url: str, xpath: str, scraper: Scraper) -> None:
         super().__init__(self.KIND, name, url, scraper)
         self._xpath = xpath
         self._value = None
-
 
     def execute(self) -> bool:
         self._value = self._scraper.scrape(self._url, self._xpath)
@@ -31,5 +30,5 @@ class GetXPathValue(Command):
 
         result = template(
             f"{PLACEHOLDER_COMMANDS_PREFIX}{self._name}.value", result, self._value)
-        
+
         return result

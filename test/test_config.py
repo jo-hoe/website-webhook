@@ -4,7 +4,7 @@ from datetime import timedelta
 
 from app.command.triggercallbackonchangedstate import TriggerCallbackOnChangedState
 from app.config import create_config
-from app.scraper import Scraper
+from app.scraper.javascript_scraper import JavaScriptScraper
 
 TEST_FILE_PATH = "test_config.yaml"
 
@@ -41,7 +41,7 @@ def test_create_config():
     assert config.commands[0]._name == "changedState"
     assert config.commands[0]._url == "https://myurl.com"
     assert config.commands[0]._xpath == "//a[@class='some class']/text()"
-    assert isinstance(config.commands[0]._scraper, Scraper)
+    assert isinstance(config.commands[0]._scraper, JavaScriptScraper)
 
 
 def get_configuration_filepath():
