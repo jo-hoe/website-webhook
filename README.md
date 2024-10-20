@@ -11,6 +11,7 @@ Provides a helm chart for K8s deployments.
 cron: "0 * * * *" # cron between command execution, default is every hour
 executeOnStartUp: true # if set to true, the function will be executed on startup, default true
 url: "https://myurl.com"
+enableJavaScript: false # allow to specify if javascript should be executed on page, default false
 commands:
   - kind: "getXPathValue" # provides name, xpath, kind and value and will never trigger a callback
     name: "value" # arbitrary name for the command, used for templating
