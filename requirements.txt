@@ -4,7 +4,7 @@ cffi==1.17.1
 charset-normalizer==3.4.0
 cloudscraper==1.2.71
 colorama==0.4.6
-croniter==3.0.3
+croniter==3.0.4
 h11==0.14.0
 idna==3.10
 iniconfig==2.0.0
