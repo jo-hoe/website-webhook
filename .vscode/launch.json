@@ -11,7 +11,7 @@
             "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
             "env": {
-                "CONFIG_PATH": "${workspaceFolder}/dev/rssconfig.yaml"
+                "CONFIG_PATH": "${workspaceFolder}/dev/config.yaml"
             }
         }
     ]

@@ -22,7 +22,7 @@ class JavaScriptScraper(Scraper):
 
         webdriver = WebDriverCreator.create_webdriver()
         webdriver.get(url)
-        elements = self.wait_for_element(webdriver, selenium_xpath)
+        self.wait_for_element(webdriver, selenium_xpath)
         source = webdriver.page_source
         webdriver.close()
 

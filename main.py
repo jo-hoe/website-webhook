@@ -3,7 +3,7 @@ import os
 
 from prometheus_client import start_http_server
 
-from app.command.prometheus_collector import CollectorManager
+from app.prometheus_collector import CollectorManager
 from app.websitewebhook import start
 
 DEFAULT_CONFIG_PATH = "/run/config/config.yaml"

@@ -7,7 +7,7 @@ from typing import Callable
 from croniter import croniter
 
 from app.command.commandinvoker import CommandInvoker
-from app.command.prometheus_collector import CollectorManager
+from app.prometheus_collector import CollectorManager
 from app.config import Config, create_config
 
 

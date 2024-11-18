@@ -2,7 +2,7 @@ from datetime import date, datetime
 import pytest
 from prometheus_client import REGISTRY
 
-from app.command.prometheus_collector import CollectorManager, ExecutionStatus
+from app.prometheus_collector import CollectorManager, ExecutionStatus
 
 
 # prepare test environment up to yield

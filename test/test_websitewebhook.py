@@ -3,7 +3,7 @@ from time import sleep
 import pytest
 from prometheus_client import REGISTRY
 
-from app.command.prometheus_collector import CollectorManager
+from app.prometheus_collector import CollectorManager
 from app.config import Callback, Config
 from app.websitewebhook import schedule_process
 from test.mock import MockCommand

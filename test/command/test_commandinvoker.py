@@ -3,7 +3,7 @@ from prometheus_client import REGISTRY
 import pytest
 import responses
 
-from app.command.prometheus_collector import CollectorManager, ExecutionStatus
+from app.prometheus_collector import CollectorManager, ExecutionStatus
 from app.config import Callback, NameValuePair
 from app.command.commandinvoker import CommandInvoker
 from test.mock import MockCommand, MockScraper

@@ -4,7 +4,7 @@ import requests
 
 from typing import List
 from app.command.command import Command
-from app.command.prometheus_collector import CollectorManager, ExecutionStatus
+from app.prometheus_collector import CollectorManager, ExecutionStatus
 from app.config import Callback, NameValuePair
 
 
