@@ -3,13 +3,14 @@ import logging
 from lxml import etree
 
 from app.scraper.scraper import Scraper
-from app.scraper.webdrivercreator import WebDriverCreator
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
+
+from selenium_crawler import create_webdriver
 
 
 class JavaScriptScraper(Scraper):
@@ -20,14 +21,14 @@ class JavaScriptScraper(Scraper):
         # selenium cannot resolve non webelements such as texts
         selenium_xpath = xpath.replace("/text()", "")
 
-        webdriver = WebDriverCreator.create_webdriver()
+        webdriver = create_webdriver()
         webdriver.get(url)
         self.wait_for_element(webdriver, selenium_xpath)
         source = webdriver.page_source
         webdriver.close()
 
         # xpath parsing
-        tree = etree.HTML(source)
+        tree = etree.HTML(source, parser=None)
 
         if tree is None:
             raise Exception(f"could not parse '{url}'")
