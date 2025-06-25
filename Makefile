@@ -4,7 +4,7 @@ include help.mk
 ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 PYTHON_DIR := ${ROOT_DIR}.venv/Scripts/
 IMAGE_NAME := "website-webhook"
-IMAGE_VERSION := "2.1.0"
+IMAGE_VERSION := "2.2.0"
 
 .DEFAULT_GOAL := start-docker
 
@@ -25,7 +25,7 @@ update: pull ## pulls git repo and installs all dependencies
 
 .PHONY: save-dependencies
 save-dependencies: ## save current dependencies
-	${PYTHON_DIR}pip freeze > ${ROOT_DIR}requirements.txt
+	"${PYTHON_DIR}pip" list --not-required --format=freeze | grep -v "pip" > "${ROOT_DIR}requirements.txt"
 
 .PHONY: test
 test: ## run all tests
@@ -46,6 +46,7 @@ start-cluster: # starts k3d cluster and registry
 .PHONY: start-k3d
 start-k3d: start-cluster push-k3d ## run make `start-k3d api_key=<your_api_key>` start k3d cluster and deploy local code
 	@helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+	@helm repo update
 	@helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack
 	@helm install ${IMAGE_NAME} ${ROOT_DIR}charts/${IMAGE_NAME}  \
 		--set image.repository=registry.localhost:5000/${IMAGE_NAME} --set image.tag=${IMAGE_VERSION} \

@@ -91,6 +91,9 @@ make start
 
 [Install K3D](https://k3d.io/#install-script) to run the service in a local Kubernetes cluster.
 Ensure your [turned on Kubernetes in Docker Desktop](https://docs.docker.com/desktop/kubernetes/#install-and-turn-on-kubernetes).
+
+Ensure that you have a valid `config.yaml` in the `dev` folder, as described in the [Configuration](#configuration) section.
+
 Run the following command to start the service in a local Kubernetes cluster.
 
 ```bash
