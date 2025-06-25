@@ -15,7 +15,8 @@ spec:
     metadata:
       {{- with .Values.podAnnotations }}
       annotations:
-        {{- toYaml . | nindent 8 }}
+        {{- $checksum := dict "checksum/config" (include (print $.Template.BasePath "/configmap.yaml") . | sha256sum) }}
+        {{- toYaml (merge $checksum .Values.podAnnotations) | nindent 8 }}
       {{- end }}
       labels:
         {{- include "website-webhook.labels" . | nindent 8 }}
