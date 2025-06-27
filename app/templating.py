@@ -1,11 +1,24 @@
 import re
+import ast
+from typing import Any
 
 
 PLACEHOLDER_START = "<<"
 PLACEHOLDER_END = ">>"
 
-def template(key: str, value: str, replace_with: str) -> str:
-    cleaned_value = re.sub(f"{PLACEHOLDER_START}\\s", PLACEHOLDER_START, value)
-    cleaned_value = re.sub(f"\\s{PLACEHOLDER_END}", PLACEHOLDER_END, cleaned_value)
+_literal_regex = re.compile(
+    r"^\s*(\[.*\]|\{.*\}|'.*'|\".*\"|\d+(\.\d+)?|True|False|None)\s*$", re.DOTALL)
 
-    return cleaned_value.replace(f"{PLACEHOLDER_START}{key}{PLACEHOLDER_END}", replace_with)
+
+def template(key: str, value: str, replace_with: str) -> Any:
+    # Replace placeholders with or without whitespace
+    pattern = re.compile(
+        rf"{re.escape(PLACEHOLDER_START)}\s*{re.escape(key)}\s*{re.escape(PLACEHOLDER_END)}")
+    replaced = pattern.sub(replace_with, value)
+    # Only parse as literal if it looks like a literal and is not empty or whitespace
+    if _literal_regex.match(replaced) and replaced.strip():
+        try:
+            return ast.literal_eval(replaced)
+        except Exception:
+            pass  # fallback to string if parsing fails
+    return replaced
