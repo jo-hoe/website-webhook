@@ -10,7 +10,13 @@ _literal_regex = re.compile(
     r"^\s*(\[.*\]|\{.*\}|'.*'|\".*\"|\d+(\.\d+)?|True|False|None)\s*$", re.DOTALL)
 
 
-def template(key: str, value: str, replace_with: str) -> Any:
+def template(key: str, value: Any, replace_with: str) -> Any:
+    # Recursively process lists
+    if isinstance(value, list):
+        return [template(key, v, replace_with) for v in value]
+    # Only process if value is a string
+    if not isinstance(value, str):
+        return value
     # Replace placeholders with or without whitespace
     pattern = re.compile(
         rf"{re.escape(PLACEHOLDER_START)}\s*{re.escape(key)}\s*{re.escape(PLACEHOLDER_END)}")

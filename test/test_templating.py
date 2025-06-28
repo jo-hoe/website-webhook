@@ -10,3 +10,6 @@ def test_templating_with_whitespaces():
 
 def test_templating_with_array():
     assert template("key", '["<<key>>"]', "test") == ["test"]
+
+def test_templating_with_array_input():
+    assert template("key", ["<<key>>"], "test") == ["test"]
