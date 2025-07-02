@@ -13,11 +13,13 @@ spec:
       {{- include "website-webhook.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
         {{- $checksum := dict "checksum/config" (include (print $.Template.BasePath "/configmap.yaml") . | sha256sum) }}
+        {{- if .Values.podAnnotations }}
         {{- toYaml (merge $checksum .Values.podAnnotations) | nindent 8 }}
-      {{- end }}
+        {{- else }}
+        {{- toYaml $checksum | nindent 8 }}
+        {{- end }}
       labels:
         {{- include "website-webhook.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
