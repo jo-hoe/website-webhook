@@ -12,9 +12,8 @@ data:
     url: "{{ .Values.url }}"
     callback:
       url: "{{ .Values.callback.url }}"
-      method: "{{ .Values.callback.method }}"
-      enableJavaScript: "{{ .Values.callback.enableJavaScript }}"
-      timeout: "{{ .Values.callback.timeout }}"
+      method: "{{ .Values.callback.method | default "POST" }}"
+      timeout: "{{ .Values.callback.timeout | default "24s" }}"
       maxRetries: {{ .Values.callback.maxRetries | default 0 }}
       headers:
         {{- toYaml .Values.callback.headers | nindent 8 }}
