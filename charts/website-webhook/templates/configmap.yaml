@@ -7,12 +7,15 @@ metadata:
 data:
   config.yaml: |-
     cron: "{{ .Values.cron }}"
-    executeOnStartUp: {{ .Values.executeOnStartUp }}
+    executeOnStartUp: {{ .Values.executeOnStartUp | default true }}
+    enableJavaScript: {{ .Values.enableJavaScript | default false }}
     url: "{{ .Values.url }}"
     callback:
       url: "{{ .Values.callback.url }}"
       method: "{{ .Values.callback.method }}"
       enableJavaScript: "{{ .Values.callback.enableJavaScript }}"
+      timeout: "{{ .Values.callback.timeout }}"
+      maxRetries: {{ .Values.callback.maxRetries | default 0 }}
       headers:
         {{- toYaml .Values.callback.headers | nindent 8 }}
       body:

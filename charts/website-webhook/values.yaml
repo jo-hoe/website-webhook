@@ -6,6 +6,8 @@
 cron: "0 * * * *"
 # -- if set to true, the function will be executed on startup
 executeOnStartUp: true
+# -- defines if javascript should be executed during the run
+enableJavaScript: false
 url: ""
 # -- commands for the webhook
 # example:
@@ -18,6 +20,10 @@ callback:
   url: ""
   # -- method for the callback
   method: POST
+  # -- timeout for the callback, default is 24 seconds
+  timeout: 24s
+  # -- maximum number of retries for the callback, default is 0
+  maxRetries: 0
   # -- headers for the callback
   # example:
   # - name: Content-Type
@@ -28,8 +34,7 @@ callback:
   # - name: "description"
   #   value: "The value on page <<url>> changed from '<<commands.changedState.old>>' to '<<commands.changedState.new>>'"
   body: []
-  # -- defines if javascript should be executed during the run
-  enableJavaScript: false
+
 
 # -- The following describes the configuration of the service monitor
 serviceMonitor:

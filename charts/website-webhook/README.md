@@ -1,6 +1,6 @@
 # website-webhook
 
-![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.0](https://img.shields.io/badge/AppVersion-2.1.0-informational?style=flat-square)
+![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.2](https://img.shields.io/badge/AppVersion-2.3.2-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -14,12 +14,14 @@ A Helm chart for Kubernetes
 | autoscaling.minReplicas | int | `1` |  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | callback.body | list | `[]` | definition of the json body for the callback example: - name: "description"   value: "The value on page <<url>> changed from '<<commands.changedState.old>>' to '<<commands.changedState.new>>'" |
-| callback.enableJavaScript | bool | `false` | defines if javascript should be executed during the run |
 | callback.headers | list | `[]` | headers for the callback example: - name: Content-Type   value: application/json |
+| callback.maxRetries | int | `0` | maximum number of retries for the callback, default is 0 |
 | callback.method | string | `"POST"` | method for the callback |
+| callback.timeout | string | `"24s"` | timeout for the callback, default is 24 seconds |
 | callback.url | string | `""` | url for the callback |
 | commands | list | `[]` | commands for the webhook example: - kind: "triggerCallbackOnChangedState"   name: "changedState"   xpath: "//td[@id='p0']/text()" |
 | cron | string | `"0 * * * *"` | cron expression for scheduling of job |
+| enableJavaScript | bool | `false` | defines if javascript should be executed during the run |
 | executeOnStartUp | bool | `true` | if set to true, the function will be executed on startup |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
