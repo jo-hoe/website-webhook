@@ -1,0 +1,361 @@
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015"
+    xmlns:media="http://search.yahoo.com/mrss/"
+    xmlns="http://www.w3.org/2005/Atom" hide_annotations="true" hide_autoplay="true" hide_bar="false" hide_cards="true" hide_channel="false" hide_chat="true" hide_comments="true" hide_desc="false" hide_donate="true" hide_endscreen="true" hide_feed="true" hide_header="false" hide_merch="true" hide_meta="false" hide_mix="true" hide_moreyt="true" hide_notifs="false" hide_playlists="false" hide_prof="true" hide_recommended="true" hide_redirect_home="true" hide_search="true" hide_shorts="true" hide_sidebar="false" hide_subs="false" hide_trending="true">
+    <div id="test-script" version="0.0.1"/>
+    <link rel="self" href="https://example.test/feeds/videos.xml?channel_id=UCTESTCHAN000000000000"/>
+    <id>yt:channel:UCTESTCHAN000000000000</id>
+    <yt:channelId>UCTESTCHAN000000000000</yt:channelId>
+    <title>Example Channel</title>
+    <link rel="alternate" href="https://example.test/channel/UCTESTCHAN000000000000"/>
+    <author>
+        <name>Example Channel</name>
+        <uri>https://example.test/channel/UCTESTCHAN000000000000</uri>
+    </author>
+    <published>2025-01-01T00:00:00+00:00</published>
+    <entry>
+        <id>yt:video:VID0001</id>
+        <yt:videoId>VID0001</yt:videoId>
+        <yt:channelId>UCTESTCHAN000000000000</yt:channelId>
+        <title>Sample Video 1 | Test Series Episode #1</title>
+        <link rel="alternate" href="https://example.test/watch?v=VID0001"/>
+        <author>
+            <name>Example Channel</name>
+            <uri>https://example.test/channel/UCTESTCHAN000000000000</uri>
+        </author>
+        <published>2025-08-20T15:30:33+00:00</published>
+        <updated>2025-08-22T02:46:30+00:00</updated>
+        <media:group>
+            <media:title>Sample Video 1 | Test Series Episode #1</media:title>
+            <media:content url="https://example.test/v/VID0001?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+            <media:thumbnail url="https://media.example.test/vi/VID0001/hqdefault.jpg" width="480" height="360"/>
+            <media:description>Demo description for Sample Video 1. Visit https://example.test/store for merch. Follow updates: https://example.test/@example, https://example.test/playlist?list=PLTEST0000000000000001. Contact: contact@example.test</media:description>
+            <media:community>
+                <media:starRating count="250" average="4.98" min="1" max="5"/>
+                <media:statistics views="4500"/>
+            </media:community>
+        </media:group>
+    </entry>
+    <entry>
+        <id>yt:video:VID0002</id>
+        <yt:videoId>VID0002</yt:videoId>
+        <yt:channelId>UCTESTCHAN000000000000</yt:channelId>
+        <title>Sample Video 2 | Test Series Episode #2</title>
+        <link rel="alternate" href="https://example.test/watch?v=VID0002"/>
+        <author>
+            <name>Example Channel</name>
+            <uri>https://example.test/channel/UCTESTCHAN000000000000</uri>
+        </author>
+        <published>2025-08-07T13:01:39+00:00</published>
+        <updated>2025-08-10T15:02:46+00:00</updated>
+        <media:group>
+            <media:title>Sample Video 2 | Test Series Episode #2</media:title>
+            <media:content url="https://example.test/v/VID0002?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+            <media:thumbnail url="https://media.example.test/vi/VID0002/hqdefault.jpg" width="480" height="360"/>
+            <media:description>Demo description for Sample Video 2. Series playlist: https://example.test/playlist?list=PLTEST0000000000000002. Socials: https://example.test/@example</media:description>
+            <media:community>
+                <media:starRating count="900" average="5.00" min="1" max="5"/>
+                <media:statistics views="15000"/>
+            </media:community>
+        </media:group>
+    </entry>
+    <entry>
+        <id>yt:video:VID0003</id>
+        <yt:videoId>VID0003</yt:videoId>
+        <yt:channelId>UCTESTCHAN000000000000</yt:channelId>
+        <title>Sample Video 3 | Test Series Episode #3</title>
+        <link rel="alternate" href="https://example.test/watch?v=VID0003"/>
+        <author>
+            <name>Example Channel</name>
+            <uri>https://example.test/channel/UCTESTCHAN000000000000</uri>
+        </author>
+        <published>2025-08-05T12:01:34+00:00</published>
+        <updated>2025-08-08T11:17:19+00:00</updated>
+        <media:group>
+            <media:title>Sample Video 3 | Test Series Episode #3</media:title>
+            <media:content url="https://example.test/v/VID0003?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+            <media:thumbnail url="https://media.example.test/vi/VID0003/hqdefault.jpg" width="480" height="360"/>
+            <media:description>Demo description for Sample Video 3. Docs: https://example.test/docs. Feedback: https://example.test/feedback</media:description>
+            <media:community>
+                <media:starRating count="875" average="4.99" min="1" max="5"/>
+                <media:statistics views="14000"/>
+            </media:community>
+        </media:group>
+    </entry>
+    <entry>
+        <id>yt:video:VID0004</id>
+        <yt:videoId>VID0004</yt:videoId>
+        <yt:channelId>UCTESTCHAN000000000000</yt:channelId>
+        <title>Sample Video 4 | Test Series Episode #4</title>
+        <link rel="alternate" href="https://example.test/watch?v=VID0004"/>
+        <author>
+            <name>Example Channel</name>
+            <uri>https://example.test/channel/UCTESTCHAN000000000000</uri>
+        </author>
+        <published>2025-08-02T12:00:44+00:00</published>
+        <updated>2025-08-04T10:34:48+00:00</updated>
+        <media:group>
+            <media:title>Sample Video 4 | Test Series Episode #4</media:title>
+            <media:content url="https://example.test/v/VID0004?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+            <media:thumbnail url="https://media.example.test/vi/VID0004/hqdefault.jpg" width="480" height="360"/>
+            <media:description>Demo description for Sample Video 4. Explore: https://example.test/explore. API: https://example.test/api</media:description>
+            <media:community>
+                <media:starRating count="780" average="5.00" min="1" max="5"/>
+                <media:statistics views="15100"/>
+            </media:community>
+        </media:group>
+    </entry>
+    <entry>
+        <id>yt:video:VID0005</id>
+        <yt:videoId>VID0005</yt:videoId>
+        <yt:channelId>UCTESTCHAN000000000000</yt:channelId>
+        <title>Sample Video 5 | Test Series Episode #5</title>
+        <link rel="alternate" href="https://example.test/watch?v=VID0005"/>
+        <author>
+            <name>Example Channel</name>
+            <uri>https://example.test/channel/UCTESTCHAN000000000000</uri>
+        </author>
+        <published>2025-07-30T12:00:21+00:00</published>
+        <updated>2025-08-02T22:21:32+00:00</updated>
+        <media:group>
+            <media:title>Sample Video 5 | Test Series Episode #5</media:title>
+            <media:content url="https://example.test/v/VID0005?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+            <media:thumbnail url="https://media.example.test/vi/VID0005/hqdefault.jpg" width="480" height="360"/>
+            <media:description>Demo description for Sample Video 5. Help: https://example.test/help. Status: https://status.example.test</media:description>
+            <media:community>
+                <media:starRating count="850" average="5.00" min="1" max="5"/>
+                <media:statistics views="17000"/>
+            </media:community>
+        </media:group>
+    </entry>
+    <entry>
+        <id>yt:video:VID0006</id>
+        <yt:videoId>VID0006</yt:videoId>
+        <yt:channelId>UCTESTCHAN000000000000</yt:channelId>
+        <title>Sample Video 6 | Test Series Episode #6</title>
+        <link rel="alternate" href="https://example.test/watch?v=VID0006"/>
+        <author>
+            <name>Example Channel</name>
+            <uri>https://example.test/channel/UCTESTCHAN000000000000</uri>
+        </author>
+        <published>2025-07-28T12:01:39+00:00</published>
+        <updated>2025-08-01T03:27:38+00:00</updated>
+        <media:group>
+            <media:title>Sample Video 6 | Test Series Episode #6</media:title>
+            <media:content url="https://example.test/v/VID0006?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+            <media:thumbnail url="https://media.example.test/vi/VID0006/hqdefault.jpg" width="480" height="360"/>
+            <media:description>Demo description for Sample Video 6. Repo: https://example.test/repo. Issues: https://example.test/issues</media:description>
+            <media:community>
+                <media:starRating count="915" average="5.00" min="1" max="5"/>
+                <media:statistics views="22000"/>
+            </media:community>
+        </media:group>
+    </entry>
+    <entry>
+        <id>yt:video:VID0007</id>
+        <yt:videoId>VID0007</yt:videoId>
+        <yt:channelId>UCTESTCHAN000000000000</yt:channelId>
+        <title>Sample Video 7 | Test Series Episode #7</title>
+        <link rel="alternate" href="https://example.test/watch?v=VID0007"/>
+        <author>
+            <name>Example Channel</name>
+            <uri>https://example.test/channel/UCTESTCHAN000000000000</uri>
+        </author>
+        <published>2025-07-25T12:01:43+00:00</published>
+        <updated>2025-07-28T15:09:00+00:00</updated>
+        <media:group>
+            <media:title>Sample Video 7 | Test Series Episode #7</media:title>
+            <media:content url="https://example.test/v/VID0007?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+            <media:thumbnail url="https://media.example.test/vi/VID0007/hqdefault.jpg" width="480" height="360"/>
+            <media:description>Demo description for Sample Video 7. Blog: https://example.test/blog. News: https://example.test/news</media:description>
+            <media:community>
+                <media:starRating count="1725" average="5.00" min="1" max="5"/>
+                <media:statistics views="46000"/>
+            </media:community>
+        </media:group>
+    </entry>
+    <entry>
+        <id>yt:video:VID0008</id>
+        <yt:videoId>VID0008</yt:videoId>
+        <yt:channelId>UCTESTCHAN000000000000</yt:channelId>
+        <title>Sample Video 8 | Donut of Doom Episode #14</title>
+        <link rel="alternate" href="https://example.test/watch?v=VID0008"/>
+        <author>
+            <name>Example Channel</name>
+            <uri>https://example.test/channel/UCTESTCHAN000000000000</uri>
+        </author>
+        <published>2025-05-28T12:00:35+00:00</published>
+        <updated>2025-05-31T04:06:50+00:00</updated>
+        <media:group>
+            <media:title>Sample Video 8 | Donut of Doom Episode #14</media:title>
+            <media:content url="https://example.test/v/VID0008?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+            <media:thumbnail url="https://media.example.test/vi/VID0008/hqdefault.jpg" width="480" height="360"/>
+            <media:description>Demo description for Sample Video 8. Game page: https://example.test/app/0008. Community: https://community.example.test</media:description>
+            <media:community>
+                <media:starRating count="1020" average="5.00" min="1" max="5"/>
+                <media:statistics views="14600"/>
+            </media:community>
+        </media:group>
+    </entry>
+    <entry>
+        <id>yt:video:VID0009</id>
+        <yt:videoId>VID0009</yt:videoId>
+        <yt:channelId>UCTESTCHAN000000000000</yt:channelId>
+        <title>Sample Video 9 | Donut of Doom Episode #13</title>
+        <link rel="alternate" href="https://example.test/watch?v=VID0009"/>
+        <author>
+            <name>Example Channel</name>
+            <uri>https://example.test/channel/UCTESTCHAN000000000000</uri>
+        </author>
+        <published>2025-05-26T12:01:21+00:00</published>
+        <updated>2025-08-09T14:29:26+00:00</updated>
+        <media:group>
+            <media:title>Sample Video 9 | Donut of Doom Episode #13</media:title>
+            <media:content url="https://example.test/v/VID0009?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+            <media:thumbnail url="https://media.example.test/vi/VID0009/hqdefault.jpg" width="480" height="360"/>
+            <media:description>Demo description for Sample Video 9. Support: https://example.test/support. Security: https://security.example.test</media:description>
+            <media:community>
+                <media:starRating count="800" average="5.00" min="1" max="5"/>
+                <media:statistics views="14000"/>
+            </media:community>
+        </media:group>
+    </entry>
+    <entry>
+        <id>yt:video:VID0010</id>
+        <yt:videoId>VID0010</yt:videoId>
+        <yt:channelId>UCTESTCHAN000000000000</yt:channelId>
+        <title>Sample Video 10 | Donut of Doom Episode #12</title>
+        <link rel="alternate" href="https://example.test/watch?v=VID0010"/>
+        <author>
+            <name>Example Channel</name>
+            <uri>https://example.test/channel/UCTESTCHAN000000000000</uri>
+        </author>
+        <published>2025-05-24T12:01:44+00:00</published>
+        <updated>2025-08-13T14:56:20+00:00</updated>
+        <media:group>
+            <media:title>Sample Video 10 | Donut of Doom Episode #12</media:title>
+            <media:content url="https://example.test/v/VID0010?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+            <media:thumbnail url="https://media.example.test/vi/VID0010/hqdefault.jpg" width="480" height="360"/>
+            <media:description>Demo description for Sample Video 10. Careers: https://example.test/careers. Legal: https://example.test/legal</media:description>
+            <media:community>
+                <media:starRating count="845" average="5.00" min="1" max="5"/>
+                <media:statistics views="14500"/>
+            </media:community>
+        </media:group>
+    </entry>
+    <entry>
+        <id>yt:video:VID0011</id>
+        <yt:videoId>VID0011</yt:videoId>
+        <yt:channelId>UCTESTCHAN000000000000</yt:channelId>
+        <title>Sample Video 11 | Donut of Doom Episode #11</title>
+        <link rel="alternate" href="https://example.test/watch?v=VID0011"/>
+        <author>
+            <name>Example Channel</name>
+            <uri>https://example.test/channel/UCTESTCHAN000000000000</uri>
+        </author>
+        <published>2025-05-21T12:00:13+00:00</published>
+        <updated>2025-08-20T23:45:04+00:00</updated>
+        <media:group>
+            <media:title>Sample Video 11 | Donut of Doom Episode #11</media:title>
+            <media:content url="https://example.test/v/VID0011?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+            <media:thumbnail url="https://media.example.test/vi/VID0011/hqdefault.jpg" width="480" height="360"/>
+            <media:description>Demo description for Sample Video 11. Terms: https://example.test/terms. Privacy: https://example.test/privacy</media:description>
+            <media:community>
+                <media:starRating count="920" average="5.00" min="1" max="5"/>
+                <media:statistics views="14750"/>
+            </media:community>
+        </media:group>
+    </entry>
+    <entry>
+        <id>yt:video:VID0012</id>
+        <yt:videoId>VID0012</yt:videoId>
+        <yt:channelId>UCTESTCHAN000000000000</yt:channelId>
+        <title>Sample Video 12 | Donut of Doom Episode #10</title>
+        <link rel="alternate" href="https://example.test/watch?v=VID0012"/>
+        <author>
+            <name>Example Channel</name>
+            <uri>https://example.test/channel/UCTESTCHAN000000000000</uri>
+        </author>
+        <published>2025-05-19T12:00:28+00:00</published>
+        <updated>2025-08-22T07:08:04+00:00</updated>
+        <media:group>
+            <media:title>Sample Video 12 | Donut of Doom Episode #10</media:title>
+            <media:content url="https://example.test/v/VID0012?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+            <media:thumbnail url="https://media.example.test/vi/VID0012/hqdefault.jpg" width="480" height="360"/>
+            <media:description>Demo description for Sample Video 12. Roadmap: https://example.test/roadmap. Changelog: https://example.test/changelog</media:description>
+            <media:community>
+                <media:starRating count="800" average="5.00" min="1" max="5"/>
+                <media:statistics views="14825"/>
+            </media:community>
+        </media:group>
+    </entry>
+    <entry>
+        <id>yt:video:VID0013</id>
+        <yt:videoId>VID0013</yt:videoId>
+        <yt:channelId>UCTESTCHAN000000000000</yt:channelId>
+        <title>Sample Video 13 | Donut of Doom Episode #9</title>
+        <link rel="alternate" href="https://example.test/watch?v=VID0013"/>
+        <author>
+            <name>Example Channel</name>
+            <uri>https://example.test/channel/UCTESTCHAN000000000000</uri>
+        </author>
+        <published>2025-05-17T12:01:31+00:00</published>
+        <updated>2025-08-14T22:04:00+00:00</updated>
+        <media:group>
+            <media:title>Sample Video 13 | Donut of Doom Episode #9</media:title>
+            <media:content url="https://example.test/v/VID0013?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+            <media:thumbnail url="https://media.example.test/vi/VID0013/hqdefault.jpg" width="480" height="360"/>
+            <media:description>Demo description for Sample Video 13. Partners: https://example.test/partners. Team: https://example.test/team</media:description>
+            <media:community>
+                <media:starRating count="805" average="5.00" min="1" max="5"/>
+                <media:statistics views="15680"/>
+            </media:community>
+        </media:group>
+    </entry>
+    <entry>
+        <id>yt:video:VID0014</id>
+        <yt:videoId>VID0014</yt:videoId>
+        <yt:channelId>UCTESTCHAN000000000000</yt:channelId>
+        <title>Sample Video 14 | Donut of Doom Episode #8</title>
+        <link rel="alternate" href="https://example.test/watch?v=VID0014"/>
+        <author>
+            <name>Example Channel</name>
+            <uri>https://example.test/channel/UCTESTCHAN000000000000</uri>
+        </author>
+        <published>2025-05-14T12:01:36+00:00</published>
+        <updated>2025-06-14T02:52:49+00:00</updated>
+        <media:group>
+            <media:title>Sample Video 14 | Donut of Doom Episode #8</media:title>
+            <media:content url="https://example.test/v/VID0014?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+            <media:thumbnail url="https://media.example.test/vi/VID0014/hqdefault.jpg" width="480" height="360"/>
+            <media:description>Demo description for Sample Video 14. Docs: https://example.test/docs/series. Forum: https://forum.example.test</media:description>
+            <media:community>
+                <media:starRating count="880" average="5.00" min="1" max="5"/>
+                <media:statistics views="16580"/>
+            </media:community>
+        </media:group>
+    </entry>
+    <entry>
+        <id>yt:video:VID0015</id>
+        <yt:videoId>VID0015</yt:videoId>
+        <yt:channelId>UCTESTCHAN000000000000</yt:channelId>
+        <title>Sample Video 15 | Donut of Doom Episode #7</title>
+        <link rel="alternate" href="https://example.test/watch?v=VID0015"/>
+        <author>
+            <name>Example Channel</name>
+            <uri>https://example.test/channel/UCTESTCHAN000000000000</uri>
+        </author>
+        <published>2025-05-12T12:00:56+00:00</published>
+        <updated>2025-06-12T18:59:10+00:00</updated>
+        <media:group>
+            <media:title>Sample Video 15 | Donut of Doom Episode #7</media:title>
+            <media:content url="https://example.test/v/VID0015?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+            <media:thumbnail url="https://media.example.test/vi/VID0015/hqdefault.jpg" width="480" height="360"/>
+            <media:description>Demo description for Sample Video 15. Events: https://example.test/events. Press: https://example.test/press</media:description>
+            <media:community>
+                <media:starRating count="940" average="5.00" min="1" max="5"/>
+                <media:statistics views="16800"/>
+            </media:community>
+        </media:group>
+    </entry>
+    <script id="unhook-test"/>
+</feed>

@@ -1,6 +1,11 @@
 
+from os import path
+from pathlib import Path
 from app.command.triggercallbackonchangedstate import TriggerCallbackOnChangedState
-from test.mock import MockScraper
+from test.mock import MockContentType, MockScraper, MockScraperFromFile
+
+TEST_RESOURCES_DIR = path.join(
+    Path(__file__).resolve().parent.parent, "resources")
 
 
 def test_trigger():
@@ -27,3 +32,17 @@ def test_replace_placeholder():
     expected_result = "test-name a b"
     error_msg = f"{result} did not match {expected_result}"
     assert expected_result == result, error_msg
+
+
+def test_rss_feed_regex_first_item_in_list():
+    test_file_path = path.join(TEST_RESOURCES_DIR, "test_feed_content.xml")
+
+    command = TriggerCallbackOnChangedState(
+        "test-name", "", "(//*[local-name()='link'][1]/@href)[2]", MockScraperFromFile(
+            test_file_path, MockContentType.XML)
+    )
+
+    # First run establishes baseline; no change should be triggered
+    assert not command.execute(), "expected result after first run is false"
+    assert command._old_value is not None, "old value should be set"
+    assert command._old_value == "https://example.test/watch?v=VID0001", "unexpected old value"

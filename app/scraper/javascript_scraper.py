@@ -1,5 +1,4 @@
 
-import logging
 from lxml import etree
 
 from app.scraper.scraper import Scraper
@@ -30,16 +29,7 @@ class JavaScriptScraper(Scraper):
         # xpath parsing
         tree = etree.HTML(source, parser=None)
 
-        if tree is None:
-            raise Exception(f"could not parse '{url}'")
-        result = tree.xpath(xpath)
-        if len(result) == 0:
-            raise Exception(f"did not find '{xpath}' in '{url}'")
-        elif len(result) > 1:
-            logging.info(f"found more than one '{xpath}' in '{
-                         url}' returning first one")
-
-        return str(result[0]).strip()
+        return self._find_element_in_tree(tree, xpath)
 
     def wait_for_element(self, webdriver: WebDriver, xpath: str):
         try:
