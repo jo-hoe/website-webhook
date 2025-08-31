@@ -46,3 +46,19 @@ def test_rss_feed_regex_first_item_in_list():
     assert not command.execute(), "expected result after first run is false"
     assert command._old_value is not None, "old value should be set"
     assert command._old_value == "https://example.test/watch?v=VID0001", "unexpected old value"
+
+
+def test_rss_feed_regex_link_by_text():
+    test_file_path = path.join(TEST_RESOURCES_DIR, "test_feed_content.xml")
+
+    xpath = "(//*[local-name()='entry'][contains(./*[local-name()='title'], 'Donut of Doom Episode')])[1]/*[local-name()='link' and @rel='alternate']/@href"
+
+    command = TriggerCallbackOnChangedState(
+        "test-name", "", xpath, MockScraperFromFile(
+            test_file_path, MockContentType.XML)
+    )
+
+    # First run establishes baseline; no change should be triggered
+    assert not command.execute(), "expected result after first run is false"
+    assert command._old_value is not None, "old value should be set"
+    assert command._old_value == "https://example.test/watch?v=VID0008", "unexpected old value"
