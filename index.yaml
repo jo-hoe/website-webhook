@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   website-webhook:
   - apiVersion: v2
+    appVersion: 2.4.0
+    created: "2025-09-10T17:30:49.037467571Z"
+    description: A Helm chart for Kubernetes
+    digest: da9e2001b1779b9a8daa6ff78a55646660fdc57634eaaacdc51bbccee400b144
+    name: website-webhook
+    type: application
+    urls:
+    - https://github.com/jo-hoe/website-webhook/releases/download/website-webhook-1.4.0/website-webhook-1.4.0.tgz
+    version: 1.4.0
+  - apiVersion: v2
     appVersion: 2.3.2
     created: "2025-07-05T21:56:07.039492206Z"
     description: A Helm chart for Kubernetes
@@ -181,4 +191,4 @@ entries:
     urls:
     - https://github.com/jo-hoe/website-webhook/releases/download/website-webhook-0.1.0/website-webhook-0.1.0.tgz
     version: 0.1.0
-generated: "2025-07-05T21:56:07.039681268Z"
+generated: "2025-09-10T17:30:49.03762198Z"
