@@ -41,7 +41,7 @@ def test_create_config():
     assert config.commands[0]._name == "changedState"
     assert config.commands[0]._url == "https://myurl.com"
     assert config.commands[0]._xpath == "//a[@class='some class']/text()"
-    assert config.commands[0].exception_on_not_found == False
+    assert config.commands[0]._exception_on_not_found == False
     assert isinstance(config.commands[0]._scraper, JavaScriptScraper)
 
 
