@@ -6,6 +6,7 @@ commands:
   - kind: "triggerCallbackOnChangedState" # provides name, xpath, kind + old and new value for templating
     name: "changedState"
     xpath: "//a[@class='some class']/text()"
+    exceptionOnNotFound: false # if set to false, the command will not fail if the xpath is not found, default true
 callback:
   url: "https://example.com/callback" # callback url
   method: "POST" # method of the callback, has to be provided as uppercase string

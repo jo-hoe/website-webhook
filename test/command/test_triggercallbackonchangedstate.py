@@ -19,6 +19,25 @@ def test_trigger():
     assert not command.execute(), "should not find change"
 
 
+def test_throw_exception_on_not_found():
+    command = TriggerCallbackOnChangedState(
+        "test-name", "", "", MockScraper([None]))
+
+    try:
+        command.execute()
+        assert False, "expected CommandException"
+    except Exception as ex:
+        assert isinstance(
+            ex, Exception), f"expected CommandException, got {type(ex)}"
+
+
+def test_suppress_exception_on_not_found():
+    command = TriggerCallbackOnChangedState(
+        "test-name", "", "", MockScraper([None]), exception_on_not_found=False)
+
+    assert not command.execute()
+
+
 def test_replace_placeholder():
     command = TriggerCallbackOnChangedState(
         "test-name", "", "", MockScraper(["a", "b"]))

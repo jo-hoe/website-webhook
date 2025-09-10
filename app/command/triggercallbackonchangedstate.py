@@ -9,9 +9,10 @@ class TriggerCallbackOnChangedState(Command):
 
     KIND = "triggerCallbackOnChangedState"
 
-    def __init__(self, name: str, url: str, xpath: str, scraper: Scraper) -> None:
+    def __init__(self, name: str, url: str, xpath: str, scraper: Scraper, exception_on_not_found: bool = True) -> None:
         super().__init__(self.KIND, name, url, scraper)
         self._xpath = xpath
+        self.exception_on_not_found = exception_on_not_found
         self._old_value = None
         self._new_value = None
 
@@ -22,9 +23,15 @@ class TriggerCallbackOnChangedState(Command):
         logging.info(f"Current value: '{current_value}'")
 
         if current_value == None:
-            logging.error(f"Could not read value for xpath '{self._xpath}'")
-            raise CommandException(
-                f"Could not read value for xpath '{self._xpath}'")
+            if self.exception_on_not_found:
+                logging.error(
+                    f"Could not read value for xpath '{self._xpath}'")
+                raise CommandException(
+                    f"Could not read value for xpath '{self._xpath}'")
+            else:
+                logging.info(
+                    f"Could not read value for xpath '{self._xpath}'. Skipping.")
+                return False
 
         if self._old_value == None:
             self._old_value = current_value
