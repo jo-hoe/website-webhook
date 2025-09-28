@@ -29,6 +29,8 @@ class TriggerCallbackOnChangedState(Command):
             else:
                 logging.warning(
                     f"Could not read value for xpath '{self._xpath}' in url '{self._url}'. Skipping since exceptionOnNotFound is {self._exception_on_not_found}.")
+                if self._old_value == None:
+                    self._old_value = ""
                 return trigger_callback
 
         logging.info(f"Current value: '{current_value}'")
@@ -40,6 +42,8 @@ class TriggerCallbackOnChangedState(Command):
             else:
                 logging.warning(
                     f"Found 'None' value for xpath '{self._xpath}'. Skipping since exceptionOnNotFound is {self._exception_on_not_found}.")
+                if self._old_value == None:
+                    self._old_value = ""
                 return trigger_callback
 
         if self._old_value == None:
