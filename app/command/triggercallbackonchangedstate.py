@@ -19,19 +19,28 @@ class TriggerCallbackOnChangedState(Command):
     def execute(self) -> bool:
         trigger_callback = False
         logging.info(f"Last seen value: '{self._old_value}'")
-        current_value = self._scraper.scrape(self._url, self._xpath)
+
+        try:
+            current_value = self._scraper.scrape(self._url, self._xpath)
+        except Exception as ex:
+            if self._exception_on_not_found:
+                raise CommandException(
+                    f"Could not read value for xpath '{self._xpath}' in url '{self._url}': {ex}")
+            else:
+                logging.warning(
+                    f"Could not read value for xpath '{self._xpath}' in url '{self._url}'. Skipping since exceptionOnNotFound is {self._exception_on_not_found}.")
+                return trigger_callback
+
         logging.info(f"Current value: '{current_value}'")
 
         if current_value == None:
             if self._exception_on_not_found:
-                logging.error(
-                    f"Could not read value for xpath '{self._xpath}'")
                 raise CommandException(
-                    f"Could not read value for xpath '{self._xpath}'")
+                    f"Found 'None' value for xpath '{self._xpath}'")
             else:
-                logging.info(
-                    f"Could not read value for xpath '{self._xpath}'. Skipping.")
-                return False
+                logging.warning(
+                    f"Found 'None' value for xpath '{self._xpath}'. Skipping since exceptionOnNotFound is {self._exception_on_not_found}.")
+                return trigger_callback
 
         if self._old_value == None:
             self._old_value = current_value
