@@ -55,6 +55,11 @@ class TriggerCallbackOnChangedState(Command):
             logging.info(
                 f"Triggering callback'")
             trigger_callback = True
+        elif self._old_value == "" and current_value != "":
+            # Special case: transitioning from error state (no value found) to first real value
+            logging.info(
+                f"Triggering callback'")
+            trigger_callback = True
 
         self._old_value = self._new_value
         self._new_value = current_value

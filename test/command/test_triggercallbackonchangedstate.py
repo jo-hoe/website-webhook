@@ -29,6 +29,14 @@ def test_throw_exception_on_not_found():
     except Exception as ex:
         assert isinstance(
             ex, Exception), f"expected CommandException, got {type(ex)}"
+        
+def test_trigger_first_no_element_then_element_appears():
+    command = TriggerCallbackOnChangedState(
+        "test-name", "", "", MockScraper([None, None, "value"]), False)
+
+    assert False == command.execute()  # First run, None, should not trigger
+    assert False == command.execute()  # Second run, None, should not trigger
+    assert command.execute(), "expected result after third run is true"
 
 
 def test_suppress_exception_on_not_found():
