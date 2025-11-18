@@ -38,6 +38,15 @@ def test_trigger_first_no_element_then_element_appears():
     assert False == command.execute()  # Second run, None, should not trigger
     assert command.execute(), "expected result after third run is true"
 
+def test_do_not_trigger_on_empty_or_none_values():
+    command = TriggerCallbackOnChangedState(
+        "test-name", "", "", MockScraper([None, "", None, "", "value"]), False)
+
+    assert False == command.execute()  # None, should not trigger
+    assert False == command.execute()  # empty, should not trigger
+    assert False == command.execute()  # None, should not trigger
+    assert False == command.execute()  # empty, should not trigger
+    assert command.execute(), "expected result after value is set is true"
 
 def test_suppress_exception_on_not_found():
     command = TriggerCallbackOnChangedState(
