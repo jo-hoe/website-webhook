@@ -99,19 +99,20 @@ class CommandInvoker:
 
     def _send_callback(self, request: requests.PreparedRequest) -> bool:
         success = False
-        session = requests.Session()
-
-        retry_count = 0
-        stop = False
-        while not stop:
-            response = None
-            try:
-                response = session.send(
-                    request, timeout=self.callback.timeout.seconds)
-            except BaseException as ex:
-                logging.error(f"Request send failed: {ex}")
-            retry_count += 1
-            stop = (response and response.ok) or retry_count > self.callback.retries
+        response = None
+        
+        with requests.Session() as session:
+            retry_count = 0
+            stop = False
+            while not stop:
+                try:
+                    response = session.send(
+                        request, timeout=self.callback.timeout.seconds)
+                except BaseException as ex:
+                    logging.error(f"Request send failed: {ex}")
+                    response = None
+                retry_count += 1
+                stop = (response and response.ok) or retry_count > self.callback.retries
 
         if response is not None:
             if not response.ok:

@@ -20,13 +20,15 @@ class JavaScriptScraper(Scraper):
         # selenium cannot resolve non webelements such as texts
         selenium_xpath = xpath.replace("/text()", "")
 
-        webdriver = create_webdriver()
+        webdriver = None
         try:
+            webdriver = create_webdriver()
             webdriver.get(url)
             self.wait_for_element(webdriver, selenium_xpath)
             source = webdriver.page_source
         finally:
-            webdriver.quit()
+            if webdriver is not None:
+                webdriver.quit()
 
         # xpath parsing
         tree = etree.HTML(source, parser=None)
