@@ -21,10 +21,12 @@ class JavaScriptScraper(Scraper):
         selenium_xpath = xpath.replace("/text()", "")
 
         webdriver = create_webdriver()
-        webdriver.get(url)
-        self.wait_for_element(webdriver, selenium_xpath)
-        source = webdriver.page_source
-        webdriver.close()
+        try:
+            webdriver.get(url)
+            self.wait_for_element(webdriver, selenium_xpath)
+            source = webdriver.page_source
+        finally:
+            webdriver.quit()
 
         # xpath parsing
         tree = etree.HTML(source, parser=None)
