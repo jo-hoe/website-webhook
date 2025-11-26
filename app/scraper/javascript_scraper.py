@@ -21,19 +21,30 @@ class JavaScriptScraper(Scraper):
         selenium_xpath = xpath.replace("/text()", "")
 
         webdriver = None
+        tree = None
+        result = None
+        
         try:
             webdriver = create_webdriver()
             webdriver.get(url)
             self.wait_for_element(webdriver, selenium_xpath)
             source = webdriver.page_source
+            
+            # xpath parsing
+            tree = etree.HTML(source, parser=None)
+            result = self._find_element_in_tree(tree, xpath)
+            
         finally:
+            # Explicitly clean up resources
+            if tree is not None:
+                tree.clear()
+                del tree
+            
             if webdriver is not None:
                 webdriver.quit()
-
-        # xpath parsing
-        tree = etree.HTML(source, parser=None)
-
-        return self._find_element_in_tree(tree, xpath)
+                del webdriver
+        
+        return result
 
     def wait_for_element(self, webdriver: WebDriver, xpath: str):
         try:
