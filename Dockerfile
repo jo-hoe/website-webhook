@@ -1,12 +1,6 @@
 # syntax=docker/dockerfile:1
-
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Dockerfile reference guide at
-# https://docs.docker.com/go/dockerfile-reference/
-
-# Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
-ARG PYTHON_VERSION=3.13.0
-FROM python:${PYTHON_VERSION}-alpine3.20
+ARG PYTHON_VERSION=3.12
+FROM python:${PYTHON_VERSION}-slim
 
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -17,34 +11,26 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Create a non-privileged user that the app will run under.
-# See https://docs.docker.com/go/dockerfile-user-best-practices/
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
+# Install chromium and chromedriver for JavaScript scraping (if enabled)
+# Note: Only needed if enableJavaScript: true in config
+RUN apt-get update && apt-get install -y \
+    chromium \
+    chromium-driver \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set display port and dbus env to avoid hanging
 ENV DISPLAY=:99 \
     DBUS_SESSION_BUS_ADDRESS=/dev/null
 
-# Add chromedriver and directories
-RUN apk add --no-cache chromium-chromedriver && \
-    mkdir -p /nonexistent/.cache/selenium && \
-    chown -R appuser /nonexistent/.cache/selenium
-
 # Download dependencies as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
-# Leverage a bind mount to requirements.txt to avoid having to copy them into
-# into this layer.
 RUN --mount=type=cache,target=/root/.cache/pip \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     python -m pip install -r requirements.txt
+
+# Create a non-privileged user that the app will run under.
+RUN useradd -m -u 10001 appuser && \
+    mkdir -p /home/appuser/.cache/selenium && \
+    chown -R appuser:appuser /home/appuser/.cache
 
 # Switch to the non-privileged user to run the application.
 USER appuser
