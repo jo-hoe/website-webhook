@@ -35,6 +35,26 @@ callback:
   #   value: "The value on page <<url>> changed from '<<commands.changedState.old>>' to '<<commands.changedState.new>>'"
   body: []
 
+# -- State storage configuration
+storage:
+  # -- Storage backend type: "memory" or "redis"
+  backend: memory
+  # -- Redis configuration (only used when backend is "redis")
+  redis:
+    # -- Redis host address
+    host: ""
+    # -- Redis port number
+    port: 6379
+    # -- Redis database number
+    db: 0
+    # -- Redis password (optional, use secret for sensitive data)
+    password: ""
+    # -- Key prefix for isolating multiple applications using the same Redis instance
+    keyPrefix: "website-webhook"
+    # -- Reference to an existing secret containing Redis password
+    # The secret should have a key named "redis-password"
+    existingSecret: ""
+
 
 # -- The following describes the configuration of the service monitor
 serviceMonitor:

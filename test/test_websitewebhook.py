@@ -4,7 +4,7 @@ import pytest
 from prometheus_client import REGISTRY
 
 from app.prometheus_collector import CollectorManager
-from app.config import Callback, Config
+from app.config import Callback, Config, StorageConfig
 from app.websitewebhook import schedule_process
 from test.mock import MockCommand
 
@@ -40,7 +40,8 @@ def test_schedule_process():
             retries=1,
             timeout="1s",
             url=""
-        )
+        ),
+        storage_config=StorageConfig(backend="memory")
     )
 
     thread = Thread(target=schedule_process, args=(config, mock_function))

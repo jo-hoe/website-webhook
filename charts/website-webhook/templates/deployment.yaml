@@ -53,6 +53,28 @@ spec:
               value: "{{ .Values.probePort }}"
             - name: METRICS_PORT
               value: "{{ .Values.service.port }}"
+            - name: STORAGE_BACKEND
+              value: "{{ .Values.storage.backend }}"
+            {{- if eq .Values.storage.backend "redis" }}
+            - name: REDIS_HOST
+              value: "{{ .Values.storage.redis.host }}"
+            - name: REDIS_PORT
+              value: "{{ .Values.storage.redis.port }}"
+            - name: REDIS_DB
+              value: "{{ .Values.storage.redis.db }}"
+            - name: REDIS_KEY_PREFIX
+              value: "{{ .Values.storage.redis.keyPrefix }}"
+            {{- if .Values.storage.redis.existingSecret }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.storage.redis.existingSecret }}
+                  key: redis-password
+            {{- else if .Values.storage.redis.password }}
+            - name: REDIS_PASSWORD
+              value: "{{ .Values.storage.redis.password }}"
+            {{- end }}
+            {{- end }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:

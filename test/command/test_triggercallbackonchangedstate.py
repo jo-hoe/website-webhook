@@ -2,6 +2,7 @@
 from os import path
 from pathlib import Path
 from app.command.triggercallbackonchangedstate import TriggerCallbackOnChangedState
+from app.storage.inmemory_storage import InMemoryStorage
 from test.mock import MockContentType, MockScraper, MockScraperFromFile
 
 TEST_RESOURCES_DIR = path.join(
@@ -9,8 +10,9 @@ TEST_RESOURCES_DIR = path.join(
 
 
 def test_trigger():
+    storage = InMemoryStorage()
     command = TriggerCallbackOnChangedState(
-        "test-name", "", "", MockScraper(["a", "a", "b", "b"]))
+        "test-name", "", "", MockScraper(["a", "a", "b", "b"]), storage)
 
     assert not command.execute(), "expected result after first run is false"
     assert not command.execute(), "expected result after second run is false"
@@ -20,8 +22,9 @@ def test_trigger():
 
 
 def test_throw_exception_on_not_found():
+    storage = InMemoryStorage()
     command = TriggerCallbackOnChangedState(
-        "test-name", "", "", MockScraper([None]))
+        "test-name", "", "", MockScraper([None]), storage)
 
     try:
         command.execute()
@@ -31,16 +34,18 @@ def test_throw_exception_on_not_found():
             ex, Exception), f"expected CommandException, got {type(ex)}"
         
 def test_trigger_first_no_element_then_element_appears():
+    storage = InMemoryStorage()
     command = TriggerCallbackOnChangedState(
-        "test-name", "", "", MockScraper([None, None, "value"]), False)
+        "test-name", "", "", MockScraper([None, None, "value"]), storage, False)
 
     assert False == command.execute()  # First run, None, should not trigger
     assert False == command.execute()  # Second run, None, should not trigger
     assert command.execute(), "expected result after third run is true"
 
 def test_do_not_trigger_on_empty_or_none_values():
+    storage = InMemoryStorage()
     command = TriggerCallbackOnChangedState(
-        "test-name", "", "", MockScraper([None, "", None, "", "value"]), False)
+        "test-name", "", "", MockScraper([None, "", None, "", "value"]), storage, False)
 
     assert False == command.execute()  # None, should not trigger
     assert False == command.execute()  # empty, should not trigger
@@ -49,15 +54,17 @@ def test_do_not_trigger_on_empty_or_none_values():
     assert command.execute(), "expected result after value is set is true"
 
 def test_suppress_exception_on_not_found():
+    storage = InMemoryStorage()
     command = TriggerCallbackOnChangedState(
-        "test-name", "", "", MockScraper([None]), exception_on_not_found=False)
+        "test-name", "", "", MockScraper([None]), storage, exception_on_not_found=False)
 
     assert not command.execute()
 
 
 def test_replace_placeholder():
+    storage = InMemoryStorage()
     command = TriggerCallbackOnChangedState(
-        "test-name", "", "", MockScraper(["a", "b"]))
+        "test-name", "", "", MockScraper(["a", "b"]), storage)
 
     command.execute()
     command.execute()
@@ -72,29 +79,31 @@ def test_replace_placeholder():
 
 def test_rss_feed_regex_first_item_in_list():
     test_file_path = path.join(TEST_RESOURCES_DIR, "test_feed_content.xml")
+    storage = InMemoryStorage()
 
     command = TriggerCallbackOnChangedState(
         "test-name", "", "(//*[local-name()='link'][1]/@href)[2]", MockScraperFromFile(
-            test_file_path, MockContentType.XML)
+            test_file_path, MockContentType.XML), storage
     )
 
     # First run establishes baseline; no change should be triggered
     assert not command.execute(), "expected result after first run is false"
-    assert command._old_value is not None, "old value should be set"
-    assert command._old_value == "https://example.test/watch?v=VID0001", "unexpected old value"
+    assert command._get_state("previous") is not None, "previous value should be set"
+    assert command._get_state("previous") == "https://example.test/watch?v=VID0001", "unexpected previous value"
 
 
 def test_rss_feed_regex_link_by_text():
     test_file_path = path.join(TEST_RESOURCES_DIR, "test_feed_content.xml")
+    storage = InMemoryStorage()
 
     xpath = "(//*[local-name()='entry'][contains(./*[local-name()='title'], 'Donut of Doom Episode')])[1]/*[local-name()='link' and @rel='alternate']/@href"
 
     command = TriggerCallbackOnChangedState(
         "test-name", "", xpath, MockScraperFromFile(
-            test_file_path, MockContentType.XML)
+            test_file_path, MockContentType.XML), storage
     )
 
     # First run establishes baseline; no change should be triggered
     assert not command.execute(), "expected result after first run is false"
-    assert command._old_value is not None, "old value should be set"
-    assert command._old_value == "https://example.test/watch?v=VID0008", "unexpected old value"
+    assert command._get_state("previous") is not None, "previous value should be set"
+    assert command._get_state("previous") == "https://example.test/watch?v=VID0008", "unexpected previous value"

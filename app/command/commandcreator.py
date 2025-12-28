@@ -1,17 +1,19 @@
 
 
+from typing import Optional
 from app.command.command import Command
 from app.command.getxpathvalue import GetXPathValue
 from app.command.triggercallbackonchangedstate import TriggerCallbackOnChangedState
 from app.scraper.scraper_factory import ScraperFactory
+from app.storage.state_storage import StateStorage
 
 
-def create_command(data: dict, url: str, enabled_javascript: bool) -> Command:
+def create_command(data: dict, url: str, enabled_javascript: bool, storage: Optional[StateStorage] = None) -> Command:
     kind = data["kind"]
     name = data["name"]
 
     if TriggerCallbackOnChangedState.KIND.lower() == kind.lower():
-        return TriggerCallbackOnChangedState(name, url, data["xpath"], ScraperFactory.get_scraper(enabled_javascript), data.get("exceptionOnNotFound", True))
+        return TriggerCallbackOnChangedState(name, url, data["xpath"], ScraperFactory.get_scraper(enabled_javascript), storage, data.get("exceptionOnNotFound", True))
     if GetXPathValue.KIND.lower() == kind.lower():
         return GetXPathValue(name, url, data["xpath"], ScraperFactory.get_scraper(enabled_javascript))
     else:
