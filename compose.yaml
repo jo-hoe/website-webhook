@@ -47,5 +47,16 @@ services:
     image: redis:8-alpine
     ports:
       - 6379:6379
+    command: >
+      redis-server
+      --maxmemory 8mb
+      --maxmemory-policy allkeys-lru
+      --save ""
+      --appendonly no
+      --databases 1
+      --tcp-backlog 128
+      --maxclients 10
+      --hz 10
+      --loglevel warning
     profiles:
       - redis
