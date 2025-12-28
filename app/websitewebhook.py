@@ -14,7 +14,16 @@ from app.config import Config, create_config
 _shutdown_event = Event()
 
 
-def start(config_path: str):
+def execute_once(config_path: str):
+    """Execute commands once and exit. Used for job/cron mode."""
+    config = create_config(config_path)
+    invoker = CommandInvoker(config.commands, config.callback)
+    logging.info("Executing commands in job mode")
+    invoker.execute_all_commands()
+    logging.info("Commands executed successfully")
+
+
+def start_with_schedule(config_path: str):
     config = create_config(config_path)
     thread = Thread(target=schedule_process, args=(config, execute))
     thread.daemon = True  # Allow process to exit even if thread is running
@@ -61,5 +70,5 @@ def schedule_process(config: Config, func: Callable):
         stop = func(invoker)
         if stop:
             break
-    
+
     logging.info("Scheduler stopped")

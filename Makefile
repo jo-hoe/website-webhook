@@ -44,12 +44,13 @@ start-cluster: # starts k3d cluster and registry
 	@k3d cluster create --config ${ROOT_DIR}k3d/clusterconfig.yaml
 
 .PHONY: start-k3d
-start-k3d: start-cluster push-k3d ## run make `start-k3d api_key=<your_api_key>` start k3d cluster and deploy local code
-	@helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+start-k3d: start-cluster push-k3d ## run make `start-k3d` start k3d cluster and deploy local code with Redis
+	@helm repo add bitnami https://charts.bitnami.com/bitnami
 	@helm repo update
-	@helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack
+	@helm install redis bitnami/redis --set auth.enabled=false
 	@helm install ${IMAGE_NAME} ${ROOT_DIR}charts/${IMAGE_NAME}  \
 		--set image.repository=registry.localhost:5000/${IMAGE_NAME} --set image.tag=${IMAGE_VERSION} \
+		--set storage.redis.host=redis-master \
 		-f ${ROOT_DIR}dev/config.yaml
 
 .PHONY: stop-k3d

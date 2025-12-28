@@ -35,11 +35,8 @@ callback:
   #   value: "The value on page <<url>> changed from '<<commands.changedState.old>>' to '<<commands.changedState.new>>'"
   body: []
 
-# -- State storage configuration
+# -- Redis configuration (required for Kubernetes CronJob)
 storage:
-  # -- Storage backend type: "memory" or "redis"
-  backend: memory
-  # -- Redis configuration (only used when backend is "redis")
   redis:
     # -- Redis host address
     host: ""
@@ -55,16 +52,6 @@ storage:
     # The secret should have a key named "redis-password"
     existingSecret: ""
 
-
-# -- The following describes the configuration of the service monitor
-serviceMonitor:
-  # -- Whether to create a service monitor for the service
-  create: true
-  # -- The interval at which the metrics will be scraped
-  interval: 1m
-  # -- Name of the prometheus release label. Should equal the release name of the according prometheus.
-  release: kube-prometheus-stack
-
 image:
   repository: ghcr.io/jo-hoe/website-webhook
   pullPolicy: IfNotPresent
@@ -74,11 +61,6 @@ image:
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
-
-service:
-  type: ClusterIP
-  portName: metrics
-  port: 8010
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -115,25 +97,7 @@ resources: {}
   #   memory: 128Mi
   # requests:
   #   cpu: 100m
-  #   memory: 128M
-
-probePort: 8000
-
-livenessProbe:
-  httpGet:
-    path: /
-    port: http
-readinessProbe:
-  httpGet:
-    path: /
-    port: http
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  #   memory: 128Mi
 
 nodeSelector: {}
 

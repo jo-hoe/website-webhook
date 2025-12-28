@@ -2,17 +2,40 @@
 
 ![Version: 1.4.5](https://img.shields.io/badge/Version-1.4.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.5](https://img.shields.io/badge/AppVersion-2.4.5-informational?style=flat-square)
 
-A Helm chart for Kubernetes
+A Helm chart for Kubernetes that deploys website-webhook as a CronJob with Redis-backed state storage.
+
+## Overview
+
+This chart deploys website-webhook as a Kubernetes CronJob that:
+- Executes on a cron schedule (default: hourly)
+- Uses Redis for persistent state storage across job runs
+- Runs as a job (execute once and exit) rather than a long-running deployment
+- Requires an external Redis instance to be available
+
+## Requirements
+
+- Redis instance accessible from the Kubernetes cluster
+- The Redis host must be configured via `storage.redis.host`
+
+## Example Installation
+
+```bash
+# Install Redis (using Bitnami chart)
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install redis bitnami/redis --set auth.enabled=false
+
+# Install website-webhook
+helm install website-webhook ./charts/website-webhook \
+  --set storage.redis.host=redis-master \
+  --set url=https://example.com \
+  --set callback.url=https://webhook.site/your-id
+```
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| autoscaling.enabled | bool | `false` |  |
-| autoscaling.maxReplicas | int | `100` |  |
-| autoscaling.minReplicas | int | `1` |  |
-| autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | callback.body | list | `[]` | definition of the json body for the callback example: - name: "description"   value: "The value on page <<url>> changed from '<<commands.changedState.old>>' to '<<commands.changedState.new>>'" |
 | callback.headers | list | `[]` | headers for the callback example: - name: Content-Type   value: application/json |
 | callback.maxRetries | int | `0` | maximum number of retries for the callback, default is 0 |
@@ -28,29 +51,23 @@ A Helm chart for Kubernetes
 | image.repository | string | `"ghcr.io/jo-hoe/website-webhook"` |  |
 | image.tag | string | `""` |  |
 | imagePullSecrets | list | `[]` |  |
-| livenessProbe.httpGet.path | string | `"/"` |  |
-| livenessProbe.httpGet.port | string | `"http"` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
-| probePort | int | `8000` |  |
-| readinessProbe.httpGet.path | string | `"/"` |  |
-| readinessProbe.httpGet.port | string | `"http"` |  |
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
-| service.port | int | `8010` |  |
-| service.portName | string | `"metrics"` |  |
-| service.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.automount | bool | `true` |  |
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `""` |  |
-| serviceMonitor | object | `{"create":true,"interval":"1m","release":"kube-prometheus-stack"}` | The following describes the configuration of the service monitor |
-| serviceMonitor.create | bool | `true` | Whether to create a service monitor for the service |
-| serviceMonitor.interval | string | `"1m"` | The interval at which the metrics will be scraped |
-| serviceMonitor.release | string | `"kube-prometheus-stack"` | Name of the prometheus release label. Should equal the release name of the according prometheus. |
+| storage.redis.db | int | `0` | Redis database number |
+| storage.redis.existingSecret | string | `""` | Reference to an existing secret containing Redis password. The secret should have a key named "redis-password" |
+| storage.redis.host | string | `""` | Redis host address (required) |
+| storage.redis.keyPrefix | string | `"website-webhook"` | Key prefix for isolating multiple applications using the same Redis instance |
+| storage.redis.password | string | `""` | Redis password (optional, use secret for sensitive data) |
+| storage.redis.port | int | `6379` | Redis port number |
 | tolerations | list | `[]` |  |
 | url | string | `""` |  |
 
