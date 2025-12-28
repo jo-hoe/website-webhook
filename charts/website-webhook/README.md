@@ -2,34 +2,7 @@
 
 ![Version: 1.4.5](https://img.shields.io/badge/Version-1.4.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.5](https://img.shields.io/badge/AppVersion-2.4.5-informational?style=flat-square)
 
-A Helm chart for Kubernetes that deploys website-webhook as a CronJob with Redis-backed state storage.
-
-## Overview
-
-This chart deploys website-webhook as a Kubernetes CronJob that:
-- Executes on a cron schedule (default: hourly)
-- Uses Redis for persistent state storage across job runs
-- Runs as a job (execute once and exit) rather than a long-running deployment
-- Requires an external Redis instance to be available
-
-## Requirements
-
-- Redis instance accessible from the Kubernetes cluster
-- The Redis host must be configured via `storage.redis.host`
-
-## Example Installation
-
-```bash
-# Install Redis (using Bitnami chart)
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm install redis bitnami/redis --set auth.enabled=false
-
-# Install website-webhook
-helm install website-webhook ./charts/website-webhook \
-  --set storage.redis.host=redis-master \
-  --set url=https://example.com \
-  --set callback.url=https://webhook.site/your-id
-```
+A Helm chart for Kubernetes
 
 ## Values
 
@@ -58,13 +31,14 @@ helm install website-webhook ./charts/website-webhook \
 | podSecurityContext | object | `{}` |  |
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
-| serviceAccount.annotations | object | `{}` |  |
-| serviceAccount.automount | bool | `true` |  |
-| serviceAccount.create | bool | `true` |  |
-| serviceAccount.name | string | `""` |  |
+| serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
+| serviceAccount.automount | bool | `true` | Automatically mount a ServiceAccount's API credentials? |
+| serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| storage | object | `{"redis":{"db":0,"existingSecret":"","host":"","keyPrefix":"website-webhook","password":"","port":6379}}` | Redis configuration (required for Kubernetes CronJob) |
 | storage.redis.db | int | `0` | Redis database number |
-| storage.redis.existingSecret | string | `""` | Reference to an existing secret containing Redis password. The secret should have a key named "redis-password" |
-| storage.redis.host | string | `""` | Redis host address (required) |
+| storage.redis.existingSecret | string | `""` | Reference to an existing secret containing Redis password The secret should have a key named "redis-password" |
+| storage.redis.host | string | `""` | Redis host address |
 | storage.redis.keyPrefix | string | `"website-webhook"` | Key prefix for isolating multiple applications using the same Redis instance |
 | storage.redis.password | string | `""` | Redis password (optional, use secret for sensitive data) |
 | storage.redis.port | int | `6379` | Redis port number |
