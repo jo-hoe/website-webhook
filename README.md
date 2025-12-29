@@ -8,7 +8,7 @@ Provides a helm chart for K8s deployments.
 ## Configuration
 
 ```yaml
-cron: "0 * * * *" # cron between command execution, default is every hour
+schedule: "0 * * * *" # schedule between command execution (cron format), default is every hour
 executeOnStartUp: true # if set to true, the function will be executed on startup, default true
 url: "https://myurl.com"
 enableJavaScript: false # allow to specify if javascript should be executed on page, default false
