@@ -7,7 +7,6 @@ from typing import Callable
 from croniter import croniter
 
 from app.command.commandinvoker import CommandInvoker
-from app.prometheus_collector import CollectorManager
 from app.config import Config, create_config
 
 # Global shutdown event
@@ -47,13 +46,11 @@ def schedule_process(config: Config, func: Callable):
 
     if config.execute_on_start:
         logging.info("Running commands on startup")
-        CollectorManager.set_last_command_execution(datetime.now())
         func(invoker)
 
     logging.info("Scheduling process")
     while not _shutdown_event.is_set():
         next_execution = cron.get_next(datetime)
-        CollectorManager.set_next_command_execution(next_execution)
 
         seconds_to_wait = (next_execution - datetime.now()).total_seconds()
         logging.info(f"Waiting {seconds_to_wait}s for next execution")
@@ -66,7 +63,6 @@ def schedule_process(config: Config, func: Callable):
         if _shutdown_event.is_set():
             break
 
-        CollectorManager.set_last_command_execution(datetime.now())
         stop = func(invoker)
         if stop:
             break
