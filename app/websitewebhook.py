@@ -14,7 +14,7 @@ _shutdown_event = Event()
 
 
 def execute_once(config_path: str):
-    """Execute commands once and exit. Used for job/cron mode."""
+    """Execute commands once and exit. Used for job mode."""
     config = create_config(config_path)
     invoker = CommandInvoker(config.commands, config.callback)
     logging.info("Executing commands in job mode")
@@ -43,7 +43,7 @@ def execute(invoker: CommandInvoker) -> bool:
 
 def schedule_process(config: Config, func: Callable):
     invoker = CommandInvoker(config.commands, config.callback)
-    cron = croniter(config.cron, datetime.now())
+    cron = croniter(config.schedule, datetime.now())
 
     if config.execute_on_start:
         logging.info("Running commands on startup")

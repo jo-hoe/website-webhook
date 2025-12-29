@@ -14,7 +14,7 @@ def mock_function(dummy=None):
 @pytest.mark.integration_test
 def test_schedule_process():
     config = Config(
-        cron="*/1 * * * * *",
+        schedule="*/1 * * * * *",
         execute_on_start=True,
         url=None,
         enabled_javascript=False,

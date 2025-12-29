@@ -2,11 +2,20 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# -- cron expression for scheduling of job
-# default is beginning of every hour
-cron: "0 * * * *"
-# -- if set to true, the function will be executed on startup
-executeOnStartUp: true
+# -- Job configuration
+job:
+  # -- schedule expression for scheduling of job (cron format)
+  # default is beginning of every hour
+  schedule: "0 * * * *"
+  # -- if set to true, the function will be executed on startup
+  executeOnStartUp: true
+  # -- number of successful job history to keep
+  successfulJobsHistoryLimit: 1
+  # -- number of failed job history to keep
+  failedJobsHistoryLimit: 1
+  # -- number of attempts for failed jobs before marking as failed (includes initial attempt, so 6 = 1 attempt + 5 retries)
+  backoffLimit: 2
+
 # -- defines if javascript should be executed during the run
 enableJavaScript: false
 url: ""

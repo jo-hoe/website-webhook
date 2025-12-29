@@ -16,14 +16,18 @@ A Helm chart for Kubernetes
 | callback.timeout | string | `"24s"` | timeout for the callback, default is 24 seconds |
 | callback.url | string | `""` | url for the callback |
 | commands | list | `[]` | commands for the webhook example: - kind: "triggerCallbackOnChangedState"   name: "changedState"   xpath: "//td[@id='p0']/text()" |
-| cron | string | `"0 * * * *"` | cron expression for scheduling of job default is beginning of every hour |
 | enableJavaScript | bool | `false` | defines if javascript should be executed during the run |
-| executeOnStartUp | bool | `true` | if set to true, the function will be executed on startup |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"ghcr.io/jo-hoe/website-webhook"` |  |
 | image.tag | string | `""` |  |
 | imagePullSecrets | list | `[]` |  |
+| job | object | `{"backoffLimit":2,"executeOnStartUp":true,"failedJobsHistoryLimit":1,"schedule":"0 * * * *","successfulJobsHistoryLimit":1}` | Job configuration |
+| job.backoffLimit | int | `2` | number of attempts for failed jobs before marking as failed (includes initial attempt, so 6 = 1 attempt + 5 retries) |
+| job.executeOnStartUp | bool | `true` | if set to true, the function will be executed on startup |
+| job.failedJobsHistoryLimit | int | `1` | number of failed job history to keep |
+| job.schedule | string | `"0 * * * *"` | schedule expression for scheduling of job (cron format) default is beginning of every hour |
+| job.successfulJobsHistoryLimit | int | `1` | number of successful job history to keep |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` |  |

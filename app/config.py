@@ -57,7 +57,7 @@ class StorageConfig:
 
 
 class Config:
-    cron: str
+    schedule: str
     url: str
     enabled_javascript: bool
     execute_on_start: bool
@@ -66,10 +66,10 @@ class Config:
     storage_config: StorageConfig
     storage: StateStorage
 
-    def __init__(self, cron: str, execute_on_start: bool, url: str,
+    def __init__(self, schedule: str, execute_on_start: bool, url: str,
                  enabled_javascript: bool, commands: List[Command], callback: Callback,
                  storage_config: StorageConfig) -> None:
-        self.cron = cron
+        self.schedule = schedule
         self.url = url
         self.enabled_javascript = enabled_javascript
         self.execute_on_start = execute_on_start
@@ -90,7 +90,7 @@ def create_config(path_to_yaml: str) -> Config:
     with open(path_to_yaml, "r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
 
-    cron = config.get("cron", "0 * * * *")
+    schedule = config.get("schedule", config.get("cron", "0 * * * *"))  # Support both 'schedule' and legacy 'cron'
     url = config.get("url", None)
     execute_on_start = config.get("executeOnStartUp", True)
     enabled_javascript = config.get("enableJavaScript", False)
@@ -129,6 +129,6 @@ def create_config(path_to_yaml: str) -> Config:
             "value", None)) for body in config.get("callback", {}).get("body", [])],
     )
 
-    return Config(cron=cron, url=url, execute_on_start=execute_on_start,
+    return Config(schedule=schedule, url=url, execute_on_start=execute_on_start,
                   enabled_javascript=enabled_javascript, commands=commands, callback=callback,
                   storage_config=storage_config)

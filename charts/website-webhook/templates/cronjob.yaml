@@ -5,15 +5,16 @@ metadata:
   labels:
     {{- include "website-webhook.labels" . | nindent 4 }}
 spec:
-  schedule: "{{ .Values.cron }}"
-  successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 1
+  schedule: "{{ .Values.job.schedule }}"
+  successfulJobsHistoryLimit: {{ .Values.job.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.job.failedJobsHistoryLimit }}
   concurrencyPolicy: Forbid
   jobTemplate:
     metadata:
       labels:
         {{- include "website-webhook.labels" . | nindent 8 }}
     spec:
+      backoffLimit: {{ .Values.job.backoffLimit }}
       template:
         metadata:
           annotations:
