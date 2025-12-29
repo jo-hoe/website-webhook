@@ -57,7 +57,8 @@ storage:
     # -- Redis password (optional, use secret for sensitive data)
     password: ""
     # -- Key prefix for isolating multiple applications using the same Redis instance
-    keyPrefix: "website-webhook"
+    # Defaults to the release name if not specified
+    keyPrefix: ""
     # -- Reference to an existing secret containing Redis password
     # The secret should have a key named "redis-password"
     existingSecret: ""

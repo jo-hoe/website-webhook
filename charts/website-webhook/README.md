@@ -39,11 +39,11 @@ A Helm chart for Kubernetes
 | serviceAccount.automount | bool | `true` | Automatically mount a ServiceAccount's API credentials? |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
-| storage | object | `{"redis":{"db":0,"existingSecret":"","host":"","keyPrefix":"website-webhook","password":"","port":6379}}` | Redis configuration (required for Kubernetes CronJob) |
+| storage | object | `{"redis":{"db":0,"existingSecret":"","host":"","keyPrefix":"","password":"","port":6379}}` | Redis configuration (required for Kubernetes CronJob) |
 | storage.redis.db | int | `0` | Redis database number |
 | storage.redis.existingSecret | string | `""` | Reference to an existing secret containing Redis password The secret should have a key named "redis-password" |
 | storage.redis.host | string | `""` | Redis host address |
-| storage.redis.keyPrefix | string | `"website-webhook"` | Key prefix for isolating multiple applications using the same Redis instance |
+| storage.redis.keyPrefix | string | `""` | Key prefix for isolating multiple applications using the same Redis instance Defaults to the release name if not specified |
 | storage.redis.password | string | `""` | Redis password (optional, use secret for sensitive data) |
 | storage.redis.port | int | `6379` | Redis port number |
 | tolerations | list | `[]` |  |
