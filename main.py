@@ -1,21 +1,12 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 import signal
 import sys
 import logging
+from time import sleep
 
 from app.websitewebhook import start_with_schedule, shutdown, execute_once
 
 DEFAULT_CONFIG_PATH = "/run/config/config.yaml"
-DEFAULT_PORT = 8000
-DEFAULT_METRICS_PORT = 8010
-
-
-class app(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/html')
-        self.end_headers()
 
 
 def signal_handler(signum, frame):
@@ -40,9 +31,9 @@ if __name__ == "__main__":
             logging.info("Job completed successfully")
         except Exception as ex:
             logging.error(f"Job failed with error: {ex}")
-            sys.exit(1)  # Exit with error code to signal failure
+            sys.exit(1)  # Exit with error code to signal failure to Kubernetes
     else:
-        # Daemon mode: continuous scheduling with HTTP server
+        # Daemon mode: continuous scheduling
         logging.info("Running in daemon mode - continuous scheduling")
 
         # Register signal handlers for graceful shutdown
@@ -50,12 +41,11 @@ if __name__ == "__main__":
         signal.signal(signal.SIGINT, signal_handler)
 
         start_with_schedule(config_path)
-        port = int(os.getenv('PORT', DEFAULT_PORT))
-        logging.info(f"Starting server on port {port}")
-        # setup readiness endpoint
+        
+        # Keep the main thread alive
         try:
-            with HTTPServer(('', port), app) as server:
-                server.serve_forever()
+            while True:
+                sleep(1)
         except KeyboardInterrupt:
             logging.info("Keyboard interrupt received, shutting down...")
             shutdown()
