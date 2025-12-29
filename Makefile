@@ -4,7 +4,7 @@ include help.mk
 ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 PYTHON_DIR := ${ROOT_DIR}.venv/Scripts/
 IMAGE_NAME := "website-webhook"
-IMAGE_VERSION := "2.3.0"
+IMAGE_VERSION := "latest"
 
 .DEFAULT_GOAL := start-docker
 
@@ -44,12 +44,26 @@ start-cluster: # starts k3d cluster and registry
 	@k3d cluster create --config ${ROOT_DIR}k3d/clusterconfig.yaml
 
 .PHONY: start-k3d
-start-k3d: start-cluster push-k3d ## run make `start-k3d api_key=<your_api_key>` start k3d cluster and deploy local code
-	@helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+start-k3d: start-cluster push-k3d ## run make `start-k3d` start k3d cluster and deploy local code with Redis
+	@helm repo add bitnami https://charts.bitnami.com/bitnami
 	@helm repo update
-	@helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack
+	@helm install redis bitnami/redis \
+		--set auth.enabled=false \
+		--set master.resources.requests.memory=32Mi \
+		--set master.resources.limits.memory=32Mi \
+		--set master.persistence.enabled=false \
+		--set replica.replicaCount=0 \
+		--set master.extraFlags[0]="--maxmemory 8mb" \
+		--set master.extraFlags[1]="--maxmemory-policy allkeys-lru" \
+		--set master.extraFlags[2]="--save \"\"" \
+		--set master.extraFlags[3]="--appendonly no" \
+		--set master.extraFlags[4]="--databases 1" \
+		--set master.extraFlags[5]="--tcp-backlog 128" \
+		--set master.extraFlags[6]="--maxclients 10" \
+		--set master.extraFlags[7]="--hz 10"
 	@helm install ${IMAGE_NAME} ${ROOT_DIR}charts/${IMAGE_NAME}  \
 		--set image.repository=registry.localhost:5000/${IMAGE_NAME} --set image.tag=${IMAGE_VERSION} \
+		--set storage.redis.host=redis-master \
 		-f ${ROOT_DIR}dev/config.yaml
 
 .PHONY: stop-k3d

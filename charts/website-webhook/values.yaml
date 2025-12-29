@@ -2,10 +2,20 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# -- cron expression for scheduling of job
-cron: "0 * * * *"
-# -- if set to true, the function will be executed on startup
-executeOnStartUp: true
+# -- Job configuration
+job:
+  # -- schedule expression for scheduling of job (cron format)
+  # default is beginning of every hour
+  schedule: "0 * * * *"
+  # -- if set to true, the function will be executed on startup
+  executeOnStartUp: true
+  # -- number of successful job history to keep
+  successfulJobsHistoryLimit: 1
+  # -- number of failed job history to keep
+  failedJobsHistoryLimit: 1
+  # -- number of attempts for failed jobs before marking as failed (includes initial attempt, so 6 = 1 attempt + 5 retries)
+  backoffLimit: 2
+
 # -- defines if javascript should be executed during the run
 enableJavaScript: false
 url: ""
@@ -35,15 +45,22 @@ callback:
   #   value: "The value on page <<url>> changed from '<<commands.changedState.old>>' to '<<commands.changedState.new>>'"
   body: []
 
-
-# -- The following describes the configuration of the service monitor
-serviceMonitor:
-  # -- Whether to create a service monitor for the service
-  create: true
-  # -- The interval at which the metrics will be scraped
-  interval: 1m
-  # -- Name of the prometheus release label. Should equal the release name of the according prometheus.
-  release: kube-prometheus-stack
+# -- Redis configuration (required for Kubernetes CronJob)
+storage:
+  redis:
+    # -- Redis host address
+    host: ""
+    # -- Redis port number
+    port: 6379
+    # -- Redis database number
+    db: 0
+    # -- Redis password (optional, use secret for sensitive data)
+    password: ""
+    # -- Key prefix for isolating multiple applications using the same Redis instance
+    keyPrefix: "website-webhook"
+    # -- Reference to an existing secret containing Redis password
+    # The secret should have a key named "redis-password"
+    existingSecret: ""
 
 image:
   repository: ghcr.io/jo-hoe/website-webhook
@@ -55,19 +72,14 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-service:
-  type: ClusterIP
-  portName: metrics
-  port: 8010
-
 serviceAccount:
-  # Specifies whether a service account should be created
+  # -- Specifies whether a service account should be created
   create: true
-  # Automatically mount a ServiceAccount's API credentials?
+  # -- Automatically mount a ServiceAccount's API credentials?
   automount: true
-  # Annotations to add to the service account
+  # -- Annotations to add to the service account
   annotations: {}
-  # The name of the service account to use.
+  # -- The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
@@ -95,25 +107,7 @@ resources: {}
   #   memory: 128Mi
   # requests:
   #   cpu: 100m
-  #   memory: 128M
-
-probePort: 8000
-
-livenessProbe:
-  httpGet:
-    path: /
-    port: http
-readinessProbe:
-  httpGet:
-    path: /
-    port: http
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  #   memory: 128Mi
 
 nodeSelector: {}
 

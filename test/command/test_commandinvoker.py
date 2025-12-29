@@ -1,24 +1,10 @@
 import ast
-from prometheus_client import REGISTRY
 import pytest
 import responses
 
-from app.prometheus_collector import CollectorManager, ExecutionStatus
 from app.config import Callback, NameValuePair
 from app.command.commandinvoker import CommandInvoker
 from test.mock import MockCommand, MockScraper
-
-
-# prepare test environment up to yield
-# tear down test environment after yield
-@pytest.fixture(autouse=True)
-def setup_collectors():
-    CollectorManager.register_collectors()
-    yield
-    # Clear the registry after all tests
-    REGISTRY._collector_to_names.clear()
-    REGISTRY._names_to_collectors.clear()
-    CollectorManager._collectors.clear()
 
 
 @pytest.mark.integration_test
@@ -49,12 +35,7 @@ def test_commandinvoker_execute_all_commands():
     invoker.execute_all_commands()
     invoker.execute_all_commands()
 
-    assert REGISTRY.get_sample_value(f'{CollectorManager.CALLBACK_EXECUTION}_total', {
-                                     'status': ExecutionStatus.SUCCESS.value}) == 1
-    assert REGISTRY.get_sample_value(f'{CollectorManager.CALLBACK_EXECUTION}_total', {
-                                     'status': ExecutionStatus.FAILURE.value}) == 0
-    assert REGISTRY.get_sample_value(f'{CollectorManager.COMMAND_EXECUTION}_total', {
-                                     'status': ExecutionStatus.SUCCESS.value}) == 2
+    # Commands executed successfully (no exception raised)
 
 
 @pytest.mark.integration_test
@@ -82,11 +63,11 @@ def test_commandinvoker_retries():
     )
     invoker = CommandInvoker([command], callback)
 
-    invoker.execute_all_commands()
+    # Should raise RuntimeError due to callback failure
+    with pytest.raises(RuntimeError, match="Callback send failed"):
+        invoker.execute_all_commands()
 
     assert response.call_count == callback.retries + 1, "unexpected number of calls"
-    assert REGISTRY.get_sample_value(f'{CollectorManager.COMMAND_EXECUTION}_total', {
-                                     'status': ExecutionStatus.SUCCESS.value}) == 1
 
 
 @pytest.mark.integration_test
@@ -160,13 +141,11 @@ def test_commandinvoker_failing_commands():
     invoker = CommandInvoker(
         [successful_command, exception_command, successful_command], callback)
 
-    invoker.execute_all_commands()
+    # Should raise exception from the failing command
+    with pytest.raises(Exception):
+        invoker.execute_all_commands()
 
     assert response.call_count == 0, "unexpected number of calls"
-    assert REGISTRY.get_sample_value(f'{CollectorManager.COMMAND_EXECUTION}_total', {
-                                     'status': ExecutionStatus.FAILURE.value}) == 1
-    assert REGISTRY.get_sample_value(f'{CollectorManager.COMMAND_EXECUTION}_total', {
-                                     'status': ExecutionStatus.SUCCESS.value}) == 1
 
 
 @pytest.mark.integration_test

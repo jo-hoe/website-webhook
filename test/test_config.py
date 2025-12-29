@@ -14,7 +14,7 @@ def test_create_config():
     config = create_config(config_file_path)
 
     # general
-    assert config.cron == "4 * * * *"
+    assert config.schedule == "4 * * * *"
     assert config.execute_on_start == False
     assert config.url == "https://myurl.com"
 

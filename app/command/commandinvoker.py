@@ -4,7 +4,6 @@ import requests
 
 from typing import List
 from app.command.command import Command
-from app.prometheus_collector import CollectorManager, ExecutionStatus
 from app.config import Callback, NameValuePair
 
 
@@ -22,14 +21,10 @@ class CommandInvoker:
         for command in self.commands:
             try:
                 triggerCallback = command.execute()
-                CollectorManager.inc_command_execution(
-                    ExecutionStatus.SUCCESS)
             except Exception as ex:
-                CollectorManager.inc_command_execution(
-                    ExecutionStatus.FAILURE)
                 logging.error(
                     f"Command '{command.name}' failed due to exception '{ex}'. Cancelling execution.")
-                return
+                raise  # Re-raise the exception to signal failure
 
         if triggerCallback:
             request = self._build_request()
@@ -41,12 +36,6 @@ class CommandInvoker:
         if request is not None:
             logging.info("Sending callback")
             success = self._send_callback(request)
-            if success:
-                CollectorManager.inc_callback_execution(
-                    ExecutionStatus.SUCCESS)
-            else:
-                CollectorManager.inc_callback_execution(
-                    ExecutionStatus.FAILURE)
 
             if success:
                 logging.info("Callback sent successfully")
@@ -55,8 +44,7 @@ class CommandInvoker:
                 logging.error(
                     f"Callback send failed, caching request")
                 self.cached_request = request
-
-            return success
+                raise RuntimeError("Callback send failed")
         else:
             logging.info("No callback required")
 

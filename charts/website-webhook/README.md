@@ -9,10 +9,6 @@ A Helm chart for Kubernetes
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| autoscaling.enabled | bool | `false` |  |
-| autoscaling.maxReplicas | int | `100` |  |
-| autoscaling.minReplicas | int | `1` |  |
-| autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | callback.body | list | `[]` | definition of the json body for the callback example: - name: "description"   value: "The value on page <<url>> changed from '<<commands.changedState.old>>' to '<<commands.changedState.new>>'" |
 | callback.headers | list | `[]` | headers for the callback example: - name: Content-Type   value: application/json |
 | callback.maxRetries | int | `0` | maximum number of retries for the callback, default is 0 |
@@ -20,37 +16,36 @@ A Helm chart for Kubernetes
 | callback.timeout | string | `"24s"` | timeout for the callback, default is 24 seconds |
 | callback.url | string | `""` | url for the callback |
 | commands | list | `[]` | commands for the webhook example: - kind: "triggerCallbackOnChangedState"   name: "changedState"   xpath: "//td[@id='p0']/text()" |
-| cron | string | `"0 * * * *"` | cron expression for scheduling of job |
 | enableJavaScript | bool | `false` | defines if javascript should be executed during the run |
-| executeOnStartUp | bool | `true` | if set to true, the function will be executed on startup |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"ghcr.io/jo-hoe/website-webhook"` |  |
 | image.tag | string | `""` |  |
 | imagePullSecrets | list | `[]` |  |
-| livenessProbe.httpGet.path | string | `"/"` |  |
-| livenessProbe.httpGet.port | string | `"http"` |  |
+| job | object | `{"backoffLimit":2,"executeOnStartUp":true,"failedJobsHistoryLimit":1,"schedule":"0 * * * *","successfulJobsHistoryLimit":1}` | Job configuration |
+| job.backoffLimit | int | `2` | number of attempts for failed jobs before marking as failed (includes initial attempt, so 6 = 1 attempt + 5 retries) |
+| job.executeOnStartUp | bool | `true` | if set to true, the function will be executed on startup |
+| job.failedJobsHistoryLimit | int | `1` | number of failed job history to keep |
+| job.schedule | string | `"0 * * * *"` | schedule expression for scheduling of job (cron format) default is beginning of every hour |
+| job.successfulJobsHistoryLimit | int | `1` | number of successful job history to keep |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
-| probePort | int | `8000` |  |
-| readinessProbe.httpGet.path | string | `"/"` |  |
-| readinessProbe.httpGet.port | string | `"http"` |  |
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
-| service.port | int | `8010` |  |
-| service.portName | string | `"metrics"` |  |
-| service.type | string | `"ClusterIP"` |  |
-| serviceAccount.annotations | object | `{}` |  |
-| serviceAccount.automount | bool | `true` |  |
-| serviceAccount.create | bool | `true` |  |
-| serviceAccount.name | string | `""` |  |
-| serviceMonitor | object | `{"create":true,"interval":"1m","release":"kube-prometheus-stack"}` | The following describes the configuration of the service monitor |
-| serviceMonitor.create | bool | `true` | Whether to create a service monitor for the service |
-| serviceMonitor.interval | string | `"1m"` | The interval at which the metrics will be scraped |
-| serviceMonitor.release | string | `"kube-prometheus-stack"` | Name of the prometheus release label. Should equal the release name of the according prometheus. |
+| serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
+| serviceAccount.automount | bool | `true` | Automatically mount a ServiceAccount's API credentials? |
+| serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| storage | object | `{"redis":{"db":0,"existingSecret":"","host":"","keyPrefix":"website-webhook","password":"","port":6379}}` | Redis configuration (required for Kubernetes CronJob) |
+| storage.redis.db | int | `0` | Redis database number |
+| storage.redis.existingSecret | string | `""` | Reference to an existing secret containing Redis password The secret should have a key named "redis-password" |
+| storage.redis.host | string | `""` | Redis host address |
+| storage.redis.keyPrefix | string | `"website-webhook"` | Key prefix for isolating multiple applications using the same Redis instance |
+| storage.redis.password | string | `""` | Redis password (optional, use secret for sensitive data) |
+| storage.redis.port | int | `6379` | Redis port number |
 | tolerations | list | `[]` |  |
 | url | string | `""` |  |
 
