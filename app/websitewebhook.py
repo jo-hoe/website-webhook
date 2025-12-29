@@ -22,11 +22,12 @@ def execute_once(config_path: str):
     logging.info("Commands executed successfully")
 
 
-def start_with_schedule(config_path: str):
+def start_with_schedule(config_path: str) -> Thread:
     config = create_config(config_path)
     thread = Thread(target=schedule_process, args=(config, execute))
     thread.daemon = True  # Allow process to exit even if thread is running
     thread.start()
+    return thread
 
 
 def shutdown():

@@ -2,7 +2,6 @@ import os
 import signal
 import sys
 import logging
-from time import sleep
 
 from app.websitewebhook import start_with_schedule, shutdown, execute_once
 
@@ -40,12 +39,7 @@ if __name__ == "__main__":
         signal.signal(signal.SIGTERM, signal_handler)
         signal.signal(signal.SIGINT, signal_handler)
 
-        start_with_schedule(config_path)
+        thread = start_with_schedule(config_path)
         
-        # Keep the main thread alive
-        try:
-            while True:
-                sleep(1)
-        except KeyboardInterrupt:
-            logging.info("Keyboard interrupt received, shutting down...")
-            shutdown()
+        # Wait for the daemon thread (it will exit when shutdown() is called via signal handler)
+        thread.join()
