@@ -16,7 +16,7 @@ A Helm chart for Kubernetes
 | callback.timeout | string | `"24s"` | timeout for the callback, default is 24 seconds |
 | callback.url | string | `""` | url for the callback |
 | commands | list | `[]` | commands for the webhook example: - kind: "triggerCallbackOnChangedState"   name: "changedState"   xpath: "//td[@id='p0']/text()" |
-| cron | string | `"0 * * * *"` | cron expression for scheduling of job |
+| cron | string | `"0 * * * *"` | cron expression for scheduling of job default is beginning of every hour |
 | enableJavaScript | bool | `false` | defines if javascript should be executed during the run |
 | executeOnStartUp | bool | `true` | if set to true, the function will be executed on startup |
 | fullnameOverride | string | `""` |  |

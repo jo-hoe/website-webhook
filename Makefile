@@ -4,7 +4,7 @@ include help.mk
 ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 PYTHON_DIR := ${ROOT_DIR}.venv/Scripts/
 IMAGE_NAME := "website-webhook"
-IMAGE_VERSION := "2.3.0"
+IMAGE_VERSION := "latest"
 
 .DEFAULT_GOAL := start-docker
 

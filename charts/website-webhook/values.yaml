@@ -3,6 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # -- cron expression for scheduling of job
+# default is beginning of every hour
 cron: "0 * * * *"
 # -- if set to true, the function will be executed on startup
 executeOnStartUp: true
