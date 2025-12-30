@@ -7,7 +7,7 @@ job:
   # -- schedule expression for scheduling of job (cron format)
   # default is beginning of every hour
   schedule: "0 * * * *"
-  # -- if set to true, the function will be executed on startup
+  # -- if set to true, a Job will be created with Helm hooks to run on initial deployment and when the ConfigMap changes
   executeOnStartUp: true
   # -- number of successful job history to keep
   successfulJobsHistoryLimit: 1

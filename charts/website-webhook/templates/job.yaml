@@ -1,0 +1,91 @@
+{{- if .Values.job.executeOnStartUp }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "website-webhook.fullname" . }}-{{ .Release.Revision }}
+  labels:
+    {{- include "website-webhook.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: {{ .Values.job.backoffLimit }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "website-webhook.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "website-webhook.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      restartPolicy: OnFailure
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: CONFIG_PATH
+              value: /run/config/config.yaml
+            - name: RUN_MODE
+              value: "job"
+            - name: STORAGE_BACKEND
+              value: "redis"
+            - name: REDIS_HOST
+              value: "{{ .Values.storage.redis.host }}"
+            - name: REDIS_PORT
+              value: "{{ .Values.storage.redis.port }}"
+            - name: REDIS_DB
+              value: "{{ .Values.storage.redis.db }}"
+            - name: REDIS_KEY_PREFIX
+              value: "{{ .Values.storage.redis.keyPrefix | default .Release.Name }}"
+            {{- if .Values.storage.redis.existingSecret }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.storage.redis.existingSecret }}
+                  key: redis-password
+            {{- else if .Values.storage.redis.password }}
+            - name: REDIS_PASSWORD
+              value: "{{ .Values.storage.redis.password }}"
+            {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /run/config
+              name: {{ include "website-webhook.fullname" . }}-config-volume
+              readOnly: true
+      volumes:
+        - name: {{ include "website-webhook.fullname" . }}-config-volume
+          configMap:
+            name: {{ include "website-webhook.fullname" . }}-config
+            items:
+              - key: config.yaml
+                path: config.yaml
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

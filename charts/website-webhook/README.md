@@ -1,6 +1,6 @@
 # website-webhook
 
-![Version: 2.0.1](https://img.shields.io/badge/Version-2.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.0.0](https://img.shields.io/badge/AppVersion-3.0.0-informational?style=flat-square)
+![Version: 2.1.0](https://img.shields.io/badge/Version-2.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.0.0](https://img.shields.io/badge/AppVersion-3.0.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -24,7 +24,7 @@ A Helm chart for Kubernetes
 | imagePullSecrets | list | `[]` |  |
 | job | object | `{"backoffLimit":2,"executeOnStartUp":true,"failedJobsHistoryLimit":1,"schedule":"0 * * * *","successfulJobsHistoryLimit":1}` | Job configuration |
 | job.backoffLimit | int | `2` | number of attempts for failed jobs before marking as failed (includes initial attempt, so 6 = 1 attempt + 5 retries) |
-| job.executeOnStartUp | bool | `true` | if set to true, the function will be executed on startup |
+| job.executeOnStartUp | bool | `true` | if set to true, a Job will be created with Helm hooks to run on initial deployment and when the ConfigMap changes |
 | job.failedJobsHistoryLimit | int | `1` | number of failed job history to keep |
 | job.schedule | string | `"0 * * * *"` | schedule expression for scheduling of job (cron format) default is beginning of every hour |
 | job.successfulJobsHistoryLimit | int | `1` | number of successful job history to keep |
