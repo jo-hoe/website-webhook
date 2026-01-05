@@ -3,6 +3,6 @@ croniter==6.0.0
 lxml==6.0.2
 PySocks==1.7.1
 pytest==9.0.2
-redis==5.2.1
+redis==7.1.0
 responses==0.25.8
 selenium-crawler==0.1.0
