@@ -27,7 +27,8 @@ class TriggerCallbackOnChangedState(StatefulCommand):
         previous_value = self._get_state(self.STATE_KEY_PREVIOUS)
         current_stored_value = self._get_state(self.STATE_KEY_CURRENT)
         
-        logging.info(f"Last seen value: '{previous_value}'")
+        logging.info(f"Stored previous value: '{previous_value}'")
+        logging.info(f"Stored current value: '{current_stored_value}'")
 
         try:
             scraped_value = self._scraper.scrape(self._url, self._xpath)
@@ -42,7 +43,7 @@ class TriggerCallbackOnChangedState(StatefulCommand):
                     self._set_state(self.STATE_KEY_PREVIOUS, "")
                 return trigger_callback
 
-        logging.info(f"Current value: '{scraped_value}'")
+        logging.info(f"Freshly scraped value: '{scraped_value}'")
 
         if scraped_value is None:
             if self._exception_on_not_found:
@@ -64,16 +65,15 @@ class TriggerCallbackOnChangedState(StatefulCommand):
 
         # Check if value has changed
         if current_stored_value != scraped_value:
-            logging.info(
-                f"Triggering callback'")
+            logging.info(f"Change detected (stored current -> scraped): '{current_stored_value}' -> '{scraped_value}'. Triggering callback")
             trigger_callback = True
         elif previous_value == "" and scraped_value != "":
             # Special case: transitioning from error state (no value found) to first real value
-            logging.info(
-                f"Triggering callback'")
+            logging.info("Recovered from previous error state (empty previous value). Triggering callback")
             trigger_callback = True
 
         # Update stored values: previous ← current, current ← scraped
+        logging.info(f"Committing state: previous <- '{current_stored_value}', current <- '{scraped_value}'")
         self._set_state(self.STATE_KEY_PREVIOUS, current_stored_value)
         self._set_state(self.STATE_KEY_CURRENT, scraped_value)
 
