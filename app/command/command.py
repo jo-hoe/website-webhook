@@ -1,4 +1,3 @@
-
 from abc import ABC, abstractmethod
 
 from app.scraper.scraper import Scraper
@@ -8,6 +7,15 @@ PLACEHOLDER_COMMANDS_PREFIX = "commands."
 
 
 class Command(ABC):
+    """
+    Command lifecycle contract (all commands MUST implement):
+    - execute() -> bool
+
+    Implementation guidelines:
+    - Do NOT write to persistent storage in execute(); only stage pending values.
+    - Use replace_placeholder() to expose both baseline and pending values so the
+      callback body/headers reflect the intended state transition.
+    """
 
     def __init__(self, kind: str, name: str, url: str, scraper: Scraper) -> None:
         self._kind = kind
@@ -17,7 +25,11 @@ class Command(ABC):
 
     @abstractmethod
     def execute(self) -> bool:
+        """
+        Detect changes and stage pending state (no persistence). Return True if a callback is needed.
+        """
         pass
+
 
     def replace_placeholder(self, input: str) -> str:
         result = input

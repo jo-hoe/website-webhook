@@ -7,6 +7,8 @@ from app.command.command import Command
 from app.config import Callback, NameValuePair
 
 
+from app.command.stateful_command import StatefulCommand
+
 class CommandInvoker:
 
     def __init__(self, commands: List[Command], callback: Callback):
@@ -15,24 +17,34 @@ class CommandInvoker:
         self.cached_request = None
 
     def execute_all_commands(self) -> None:
-        triggerCallback = False
-
+        """
+        Execute all commands with a strict execute/commit lifecycle.
+        - Always call command.execute() first (no persistence).
+        - If any command requests a callback, send it.
+        - Commit state only after a successful callback send, or immediately if no callback is required.
+        """
+        trigger_any = False
         request = None
+
+        # execute (no commit yet)
         for command in self.commands:
             try:
-                triggerCallback = command.execute()
+                result = command.execute()
+                trigger_any = result or trigger_any
             except Exception as ex:
                 logging.error(
                     f"Command '{command.name}' failed due to exception '{ex}'. Cancelling execution.")
                 raise  # Re-raise the exception to signal failure
 
-        if triggerCallback:
+        # build request if any change detected (or use cached)
+        if trigger_any:
             request = self._build_request()
 
-        if not triggerCallback and self.cached_request is not None:
+        if not trigger_any and self.cached_request is not None:
             logging.info("Using cached request")
             request = self.cached_request
 
+        # send (and commit on success)
         if request is not None:
             logging.info("Sending callback")
             success = self._send_callback(request)
@@ -40,12 +52,20 @@ class CommandInvoker:
             if success:
                 logging.info("Callback sent successfully")
                 self.cached_request = None
+                # Commit state for stateful commands only
+                for cmd in self.commands:
+                    if isinstance(cmd, StatefulCommand):
+                        cmd.commit_state()
             else:
-                logging.error(
-                    f"Callback send failed, caching request")
+                logging.error("Callback send failed, caching request")
                 self.cached_request = request
+                # Do NOT commit here; commit-after-success ensures retry in job mode
                 raise RuntimeError("Callback send failed")
         else:
+            # No callback needed; commit baseline/pending state immediately for stateful commands
+            for cmd in self.commands:
+                if isinstance(cmd, StatefulCommand):
+                    cmd.commit_state()
             logging.info("No callback required")
 
     def _template(self, input: List[NameValuePair], command: Command) -> List[NameValuePair]:

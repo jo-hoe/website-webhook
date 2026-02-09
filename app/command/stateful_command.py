@@ -82,11 +82,9 @@ class StatefulCommand(Command):
         return False
 
     @abstractmethod
-    def execute(self) -> bool:
+    def commit_state(self) -> None:
         """
-        Execute the command.
-        
-        Returns:
-            True if callback should be triggered, False otherwise
+        Persist any pending state prepared during execute(). Called after a successful callback send,
+        or immediately if no callback is required.
         """
         pass

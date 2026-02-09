@@ -1,4 +1,3 @@
-
 from app.command.getxpathvalue import GetXPathValue
 from test.mock import MockScraper
 
@@ -7,7 +6,8 @@ def test_replace_placeholder():
     command = GetXPathValue(
         "test-name", "", "", MockScraper(["a"]))
 
-    command.execute()
+    # execute (no persistence needed for this command)
+    assert command.execute() is False
 
     result = command.replace_placeholder(
         "<<commands.test-name.name>> <<commands.test-name.value>>")
@@ -21,5 +21,5 @@ def test_does_not_trigger_callback():
     command = GetXPathValue(
         "test-name", "", "", MockScraper(["a"]))
 
-    assert command.execute() == False
+    assert command.execute() is False
 

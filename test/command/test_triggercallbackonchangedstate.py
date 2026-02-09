@@ -14,11 +14,21 @@ def test_trigger():
     command = TriggerCallbackOnChangedState(
         "test-name", "", "", MockScraper(["a", "a", "b", "b"]), storage)
 
-    assert not command.execute(), "expected result after first run is false"
-    assert not command.execute(), "expected result after second run is false"
-    assert command.execute(), "expected result after third run is true"
+    # 1st run: establish baseline, no trigger
+    assert command.execute() is False, "expected result after first run is false"
+    command.commit_state()
 
-    assert not command.execute(), "should not find change"
+    # 2nd run: same value, no trigger
+    assert command.execute() is False, "expected result after second run is false"
+    command.commit_state()
+
+    # 3rd run: value changed, should trigger
+    assert command.execute() is True, "expected result after third run is true"
+    command.commit_state()
+
+    # 4th run: no change, no trigger
+    assert command.execute() is False, "should not find change"
+    command.commit_state()
 
 
 def test_throw_exception_on_not_found():
@@ -38,27 +48,36 @@ def test_trigger_first_no_element_then_element_appears():
     command = TriggerCallbackOnChangedState(
         "test-name", "", "", MockScraper([None, None, "value"]), storage, False)
 
-    assert False == command.execute()  # First run, None, should not trigger
-    assert False == command.execute()  # Second run, None, should not trigger
-    assert command.execute(), "expected result after third run is true"
+    assert command.execute() is False  # First run, None, should not trigger
+    command.commit_state()
+    assert command.execute() is False  # Second run, None, should not trigger
+    command.commit_state()
+    assert command.execute() is True, "expected result after third run is true"
+    command.commit_state()
 
 def test_do_not_trigger_on_empty_or_none_values():
     storage = InMemoryStorage()
     command = TriggerCallbackOnChangedState(
         "test-name", "", "", MockScraper([None, "", None, "", "value"]), storage, False)
 
-    assert False == command.execute()  # None, should not trigger
-    assert False == command.execute()  # empty, should not trigger
-    assert False == command.execute()  # None, should not trigger
-    assert False == command.execute()  # empty, should not trigger
-    assert command.execute(), "expected result after value is set is true"
+    assert command.execute() is False  # None, should not trigger
+    command.commit_state()
+    assert command.execute() is False  # empty, should not trigger
+    command.commit_state()
+    assert command.execute() is False  # None, should not trigger
+    command.commit_state()
+    assert command.execute() is False  # empty, should not trigger
+    command.commit_state()
+    assert command.execute() is True, "expected result after value is set is true"
+    command.commit_state()
 
 def test_suppress_exception_on_not_found():
     storage = InMemoryStorage()
     command = TriggerCallbackOnChangedState(
         "test-name", "", "", MockScraper([None]), storage, exception_on_not_found=False)
 
-    assert not command.execute()
+    assert command.execute() is False
+    command.commit_state()
 
 
 def test_replace_placeholder():
@@ -67,7 +86,9 @@ def test_replace_placeholder():
         "test-name", "", "", MockScraper(["a", "b"]), storage)
 
     command.execute()
+    command.commit_state()
     command.execute()
+    command.commit_state()
 
     result = command.replace_placeholder(
         "<<commands.test-name.name>> <<commands.test-name.old>> <<commands.test-name.new>>")
@@ -87,7 +108,8 @@ def test_rss_feed_regex_first_item_in_list():
     )
 
     # First run establishes baseline; no change should be triggered
-    assert not command.execute(), "expected result after first run is false"
+    assert command.execute() is False, "expected result after first run is false"
+    command.commit_state()
     assert command._get_state("previous") is not None, "previous value should be set"
     assert command._get_state("previous") == "https://example.test/watch?v=VID0001", "unexpected previous value"
 
@@ -104,6 +126,7 @@ def test_rss_feed_regex_link_by_text():
     )
 
     # First run establishes baseline; no change should be triggered
-    assert not command.execute(), "expected result after first run is false"
+    assert command.execute() is False, "expected result after first run is false"
+    command.commit_state()
     assert command._get_state("previous") is not None, "previous value should be set"
     assert command._get_state("previous") == "https://example.test/watch?v=VID0008", "unexpected previous value"
