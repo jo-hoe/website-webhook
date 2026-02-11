@@ -15,6 +15,7 @@ spec:
         {{- include "website-webhook.labels" . | nindent 8 }}
     spec:
       backoffLimit: {{ .Values.job.backoffLimit }}
+      ttlSecondsAfterFinished: {{ .Values.job.ttlSecondsAfterFinished }}
       template:
         metadata:
           annotations:
