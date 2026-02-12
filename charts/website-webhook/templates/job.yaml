@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "website-webhook.fullname" . }}-{{ .Release.Revision }}
+  name: {{ include "website-webhook.fullname" . }}-job
   labels:
     {{- include "website-webhook.labels" . | nindent 4 }}
   annotations:
