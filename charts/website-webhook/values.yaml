@@ -7,6 +7,8 @@ job:
   # -- schedule expression for scheduling of job (cron format)
   # default is beginning of every hour
   schedule: "0 * * * *"
+  # -- timezone to interpret the schedule in (IANA TZ like "Europe/Berlin"); requires Kubernetes v1.27+; if empty, cluster default (usually UTC) is used
+  timeZone: ""
   # -- if set to true, a Job will be created with Helm hooks to run on initial deployment and when the ConfigMap changes
   executeOnStartUp: true
   # -- number of successful job history to keep
