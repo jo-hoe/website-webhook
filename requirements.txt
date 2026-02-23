@@ -4,5 +4,5 @@ lxml==6.0.2
 PySocks==1.7.1
 pytest==9.0.2
 redis==7.2.0
-responses==0.25.8
+responses==0.26.0
 selenium-crawler==0.1.0
