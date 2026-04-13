@@ -2,7 +2,7 @@ cloudscraper==1.2.71
 croniter==6.2.2
 lxml==6.0.4
 PySocks==1.7.1
-pytest==9.0.2
+pytest==9.0.3
 redis==7.4.0
 responses==0.26.0
 selenium-crawler==0.1.0
