@@ -1,6 +1,6 @@
 cloudscraper==1.2.71
 croniter==6.2.2
-lxml==6.0.4
+lxml==6.1.0
 PySocks==1.7.1
 pytest==9.0.3
 redis==7.4.0
