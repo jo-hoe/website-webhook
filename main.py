@@ -3,7 +3,7 @@ import signal
 import sys
 import logging
 
-from app.websitewebhook import start_with_schedule, shutdown, execute_once
+from app.websitewebhook import start_with_schedule, shutdown, execute_once, simulate_once
 
 DEFAULT_CONFIG_PATH = "/run/config/config.yaml"
 
@@ -23,23 +23,29 @@ if __name__ == "__main__":
     run_mode = os.getenv('RUN_MODE', 'daemon').lower()
 
     if run_mode == 'job':
-        # Job mode: execute once and exit
         logging.info("Running in job mode - executing once and exiting")
         try:
             execute_once(config_path)
             logging.info("Job completed successfully")
         except Exception as ex:
             logging.error(f"Job failed with error: {ex}")
-            sys.exit(1)  # Exit with error code to signal failure to Kubernetes
+            sys.exit(1)
+
+    elif run_mode == 'simulate':
+        preset_value = os.getenv('PRESET_VALUE')
+        logging.info(f"Running in simulate mode (preset='{preset_value}')")
+        try:
+            simulate_once(config_path, preset_value)
+            logging.info("Simulate completed successfully")
+        except Exception as ex:
+            logging.error(f"Simulate failed: {ex}")
+            sys.exit(1)
+
     else:
-        # Daemon mode: continuous scheduling
         logging.info("Running in daemon mode - continuous scheduling")
 
-        # Register signal handlers for graceful shutdown
         signal.signal(signal.SIGTERM, signal_handler)
         signal.signal(signal.SIGINT, signal_handler)
 
         thread = start_with_schedule(config_path)
-        
-        # Wait for the daemon thread (it will exit when shutdown() is called via signal handler)
         thread.join()

@@ -2,8 +2,9 @@ import ast
 import pytest
 import responses
 
-from app.config import Callback, NameValuePair
+from app.command.callback_handler import HttpCallbackHandler
 from app.command.commandinvoker import CommandInvoker
+from app.config import Callback, NameValuePair
 from test.mock import MockCommand, MockScraper
 
 
@@ -30,7 +31,7 @@ def test_commandinvoker_execute_all_commands():
         headers=[],
         body=[]
     )
-    invoker = CommandInvoker([command], callback)
+    invoker = CommandInvoker([command], callback, HttpCallbackHandler())
 
     invoker.execute_all_commands()
     invoker.execute_all_commands()
@@ -61,7 +62,7 @@ def test_commandinvoker_retries():
         headers=[],
         body=[]
     )
-    invoker = CommandInvoker([command], callback)
+    invoker = CommandInvoker([command], callback, HttpCallbackHandler())
 
     # Should raise RuntimeError due to callback failure
     with pytest.raises(RuntimeError, match="Callback send failed"):
@@ -99,7 +100,7 @@ def test_commandinvoker_replace_placeholder():
             NameValuePair("body2", "<<commands.test-name.name>>")
         ]
     )
-    invoker = CommandInvoker([command], callback)
+    invoker = CommandInvoker([command], callback, HttpCallbackHandler())
 
     invoker.execute_all_commands()
 
@@ -139,7 +140,7 @@ def test_commandinvoker_failing_commands():
         body=[]
     )
     invoker = CommandInvoker(
-        [successful_command, exception_command, successful_command], callback)
+        [successful_command, exception_command, successful_command], callback, HttpCallbackHandler())
 
     # Should raise exception from the failing command
     with pytest.raises(Exception):
@@ -176,7 +177,7 @@ def test_commandinvoker_send_html_link():
             )
         ]
     )
-    invoker = CommandInvoker([successful_command], callback)
+    invoker = CommandInvoker([successful_command], callback, HttpCallbackHandler())
 
     invoker.execute_all_commands()
 
@@ -215,7 +216,7 @@ def test_commandinvoker_multiple_commands():
             )
         ]
     )
-    invoker = CommandInvoker([command1, command2], callback)
+    invoker = CommandInvoker([command1, command2], callback, HttpCallbackHandler())
 
     invoker.execute_all_commands()
 

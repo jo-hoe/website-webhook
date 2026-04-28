@@ -5,13 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug Local",
+            "name": "Simulate Job",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
             "env": {
-                "CONFIG_PATH": "${workspaceFolder}/dev/config.yaml"
+                "CONFIG_PATH": "${workspaceFolder}/dev/config.yaml",
+                "RUN_MODE": "simulate",
+                "PRESET_VALUE": "old value here"
             }
         }
     ]
