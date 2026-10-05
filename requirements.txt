@@ -5,4 +5,4 @@ PySocks==1.7.1
 pytest==9.1.1
 redis==8.1.0
 responses==0.26.3
-selenium-crawler==0.1.0
+selenium-crawler==0.1.3
